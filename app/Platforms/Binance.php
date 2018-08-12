@@ -18,7 +18,7 @@ class Binance
         "timeOffset" => 0,
     ]; // /< Additional connection options
     protected $proxyConf = null; // /< Used for story the proxy configuration
-    protected $caOverride = false; // /< set this if you donnot wish to use CA bundle auto download feature
+    protected $caOverride = true; // /< set this if you donnot wish to use CA bundle auto download feature
     protected $transfered = 0; // /< This stores the amount of bytes transfered
     protected $requestCount = 0; // /< This stores the amount of API requests
     private $httpDebug = false; // /< If you enable this, curl will output debugging information
