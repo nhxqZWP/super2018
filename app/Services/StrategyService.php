@@ -14,8 +14,8 @@ class StrategyService
                $ticker = implode('', explode('/', $symbol));
                $api = new Binance(Config('run')['get_platform_key'], Config('run')['get_platform_secret']);
                $ticks = $api->candlesticks($ticker, $period);
-               dd($ticks);
                $endSecond = array_slice($ticks,-2,1);
+dd($endSecond);
                $closePrice = $endSecond[0]['close'];
 
                $change = $endSecond[0]['close'] - $endSecond[0]['open'];
