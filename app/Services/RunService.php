@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Constants\ExamCardsConstant;
 use Illuminate\Support\Facades\Log;
 
 class RunService

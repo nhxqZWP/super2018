@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Service\RunService;
 use League\Flysystem\Config;
 
 /**
@@ -16,6 +17,7 @@ class TestController extends Controller
 {
      public function test()
      {
+          RunService::runOne();
           dd(Config('run'));
      }
 }
