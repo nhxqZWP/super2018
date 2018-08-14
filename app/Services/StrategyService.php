@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
 use App\Platforms\Binance;
 use Illuminate\Support\Facades\Redis;

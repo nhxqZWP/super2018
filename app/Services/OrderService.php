@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
 use Binance;
 
@@ -58,6 +58,7 @@ class OrderService
          return self::ORDER_STATUS_FILLED;
     }
 
+    //获取某币种当前价格
     public static function getOnePrice($platform = PlatformService::BINANCE, $ticker = 'BTCUSDT')
     {
          if ($platform == PlatformService::BINANCE) {
