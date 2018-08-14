@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Service\OrderService;
-use App\Service\RunService;
+use App\Services\OrderService;
+use App\Services\RunService;
 use Illuminate\Support\Facades\Redis;
 
 /**
