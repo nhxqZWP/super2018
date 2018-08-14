@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Service\OrderService;
 use App\Service\RunService;
-use League\Flysystem\Config;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * Created by PhpStorm.
@@ -17,7 +18,12 @@ class TestController extends Controller
 {
      public function test()
      {
+          $data = OrderService::getOnePrice();
+          dd($data);
+//          Redis::set('test', -2);
+//          $a = Redis::get('test');
+//          dd($a == -2);
           RunService::runOne();
-          dd(Config('run'));
+          dd('end');
      }
 }
