@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Binance;
+use App\Platforms\Binance;
 
 class OrderService
 {
