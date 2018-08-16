@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use App\Services\OrderService;
+use App\Services\StrategyService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +27,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+         ini_set('memory_limit', '1000M'); //内存限制
+         $schedule->call(function () {
+              for ($i = 0; $i < 6; $i++) {
+                   $result = StrategyService::BlackThree();
+                   Log::debug($result);
+                   sleep(5);
+              }
+         })->cron('* * * * *');
     }
 
     /**
@@ -35,8 +44,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
+//        $this->load(__DIR__.'/Commands');
+//
+//        require base_path('routes/console.php');
     }
 }

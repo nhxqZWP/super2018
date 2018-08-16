@@ -12,7 +12,7 @@ class OrderService
      const ORDER_STATUS_NEW = 10;
      const ORDER_STATUS_PARTIALLY_FILLED = 11;
      const ORDER_STATUS_FILLED = 12;
-     const ORDER_STATUS_CANCELED= 13;
+     const ORDER_STATUS_CANCELED = 13;
      const ORDER_STATUS_REJECTED = 14;
      const ORDER_STATUS_EXPIRED = 15;
 
@@ -20,52 +20,107 @@ class OrderService
      const ORDER_SIDE_SELL = 21;
 
      //以买单最高下买单 以卖单最低下卖单
-    public static function placeNormalOrder($ope = null, $platform = null, $symbol = null, $mark = '', $amountPercent = 1)
-    {
-        if (is_null($ope) || is_null($platform) || is_null($symbol)) {
-            return null;
-        }
+     public static function placeNormalOrder($ope = null, $platform = null, $symbol = null, $mark = '', $amountPercent = 1)
+     {
+          if (is_null($ope) || is_null($platform) || is_null($symbol)) {
+               return null;
+          }
 
-        if ($ope === self::OPE_BUY) {
+          if ($ope === self::OPE_BUY) {
 
 //             return $buyPrice;
-        } elseif ($ope == self::OPE_SELL) {
+          } elseif ($ope == self::OPE_SELL) {
 
-        }
+          }
 
-        return null;
-    }
+          return null;
+     }
 
-    //市场价下单
-    public static function placeMarketOrder($ope = null, $platform = null, $symbol = null)
-    {
-         if (is_null($ope) || is_null($platform) || is_null($symbol)) {
-              return null;
-         }
-    }
+     //以当前价格下买单
+     public static function placeBuyOrderByCurrentPrice($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $key, $secret)
+     {
+          $coins = explode('/', $symbol);
+          $ticker = $coins[0] . $coins[1];
+          $price = 0;
+          $orderId = '';
+          $quantity = 0;
+          if ($platform == PlatformService::BINANCE) {
+               $api = new Binance($key, $secret);
+               $balance = $api->balances();
+               $coin2 = $balance[$coins[1]]['available']; //usdt
+               $price = $api->prices()[$ticker];
+               $quantity = self::coinShow($coin2 / $price);
+               $res = $api->buy($ticker, $quantity, $price);
+               if (isset($res['msg'])) {
+                    return [$res['msg'], 0, '', 0];
+               }
+               $orderId = $res['orderId'];
+          }
+          return [null, $price, $orderId, $quantity];
+     }
 
-    //获取订单状态
-    public static function getOrderStatus($platform = PlatformService::BINANCE, $ticker = 'BTCUSDT',  $orderId = '')
-    {
-         if (empty($orderId)) {
-              return self::ORDER_STATUS_FILLED;
-         }
-         if ($platform == PlatformService::BINANCE) {
-              $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-              $status = $api->orderStatus($ticker, $orderId);
-              return $status['status'];
-         }
-         return self::ORDER_STATUS_FILLED;
-    }
+     //指定价格下卖单
+     public static function placeSellOrderByGivenPrice($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $price, $key, $secret)
+     {
+          $coins = explode('/', $symbol);
+          $ticker = $coins[0] . $coins[1];
+          $quantity = 0;
+          $orderId = '';
+          if ($platform == PlatformService::BINANCE) {
+               $api = new Binance($key, $secret);
+               $balance = $api->balances();
+               $coin1 = $balance[$coins[0]]['available']; //btc
+//               $quantity = self::coinShow($coin1);
+               $quantity = $coin1;
+               $res = $api->sell($ticker, $quantity, $price);
+               if (isset($res['msg'])) {
+                    return [$res['msg'], 0, ''];
+               }
+               $orderId = $res['orderId'];
+          }
+          return [null, $quantity, $orderId];
+     }
 
-    //获取某币种当前价格
-    public static function getOnePrice($platform = PlatformService::BINANCE, $ticker = 'BTCUSDT')
-    {
-         if ($platform == PlatformService::BINANCE) {
-              $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-              $prices = $api->prices();
-              dd($prices);
-              return $prices[$ticker];
-         }
-    }
+     //下市场单
+     public static function placeMarketOrder($ope = null, $platform = null, $symbol = null)
+     {
+          if (is_null($ope) || is_null($platform) || is_null($symbol)) {
+               return null;
+          }
+     }
+
+     //获取订单状态
+     public static function getOrderStatus($platform = PlatformService::BINANCE, $ticker = 'BTCUSDT', $orderId = '')
+     {
+          if (empty($orderId)) {
+               return self::ORDER_STATUS_FILLED;
+          }
+          if ($platform == PlatformService::BINANCE) {
+               $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+               $status = $api->orderStatus($ticker, $orderId);
+               return $status['status'];
+          }
+          return self::ORDER_STATUS_FILLED;
+     }
+
+     //获取某币种当前价格
+     public static function getOnePrice($platform = PlatformService::BINANCE, $ticker = 'BTCUSDT')
+     {
+          if ($platform == PlatformService::BINANCE) {
+               $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+               $prices = $api->prices();
+               return $prices[$ticker];
+          }
+          return 0;
+     }
+
+     // 币值格式化
+     public static function coinShow($num, $decPlace = 8)
+     {
+//          if (empty($num)) {
+//               return number_format(0, $decPlace, '.', '');
+//          }
+          $numDeal = floor($num * pow(10,8)) / pow(10, 8);
+          return number_format($numDeal, $decPlace, '.', '');
+     }
 }

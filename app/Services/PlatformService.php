@@ -18,4 +18,5 @@ class PlatformService
      {
           return Config('run')['get_platform_secret'];
      }
+
 }
