@@ -31,7 +31,10 @@ class Kernel extends ConsoleKernel
          ini_set('memory_limit', '1000M'); //内存限制
          $key = StrategyService::THREE_DOWN_BTCUSDT;
          $status = Redis::get($key);
-         if (is_null($status) || $status == 0) return null;
+         if (is_null($status) || $status == 0) {
+              Log::debug('not open three down');
+              return null;
+         }
 
          $schedule->call(function () {
               for ($i = 0; $i < 6; $i++) {
