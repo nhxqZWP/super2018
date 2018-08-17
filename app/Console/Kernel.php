@@ -7,6 +7,7 @@ use App\Services\StrategyService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class Kernel extends ConsoleKernel
 {
@@ -28,6 +29,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          ini_set('memory_limit', '1000M'); //内存限制
+         $key = StrategyService::THREE_DOWN_BTCUSDT;
+         $status = Redis::get($key);
+         if (is_null($status) || $status == 0) return null;
+
          $schedule->call(function () {
               for ($i = 0; $i < 6; $i++) {
                    $result = StrategyService::BlackThree();

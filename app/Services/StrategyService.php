@@ -13,6 +13,7 @@ class StrategyService
      const DOWN_MORE = -3; //跌三次及以上
      const BINANCE_FEE = 0.002;
      const PROFIT_FEE_PERCENT = 0.002;
+     const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
 
      //黑三兵后买 固定偏移卖 minute
      public static function BlackThree($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $period = '1m', $profitPercent = self::PROFIT_FEE_PERCENT)
