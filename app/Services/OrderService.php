@@ -123,4 +123,5 @@ class OrderService
           $numDeal = floor($num * pow(10,8)) / pow(10, 8);
           return number_format($numDeal, $decPlace, '.', '');
      }
+
 }

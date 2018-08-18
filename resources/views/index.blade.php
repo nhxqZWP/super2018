@@ -13,7 +13,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4"></div>
-        <div class="col-md-4" style="text-align: center;margin-top: 20%">
+        <div class="col-md-4" style="text-align: center;margin-top: 2%">
             <table class="table table-striped">
                 <tr>
                     <td>策略</td>
@@ -38,6 +38,14 @@
                     </td>
                 </tr>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <?php print_r($info) ?>
+        </div>
+        <div class="col-md-6">
+
         </div>
     </div>
 </div>
