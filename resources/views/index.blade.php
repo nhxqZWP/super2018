@@ -42,7 +42,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <?php print_r($info) ?>
+            <?php var_dump($info) ?>
         </div>
         <div class="col-md-6">
 
