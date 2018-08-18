@@ -18,6 +18,7 @@ class StrategyService
      //黑三兵后买 固定偏移卖 minute
      public static function BlackThree($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $period = '1m', $profitPercent = self::PROFIT_FEE_PERCENT)
      {
+          date_default_timezone_set('PRC');
           if ($platform == PlatformService::BINANCE) {
                //满足黑三兵
                $ticker = implode('', explode('/', $symbol));
