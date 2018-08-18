@@ -39,6 +39,7 @@ class StrategyService
 //                   "takerBuyVolume" => "130628.70280336",
 //                   "ignored" => "0"
 //                 ];
+               $openTime = date('H:i:s', intval($endSecond['openTime']/1000));
 
                //用时间戳标记数据是否更新
                $timeStampKey = $platform . $ticker . $period . 'timestamp';
@@ -59,23 +60,23 @@ class StrategyService
                if (is_null($mark)) { //第一次进来
                     if ($change >= 0) {
                          Redis::set($changKey, self::UP); //涨 1
-                         return 'mark price up';
+                         return 'mark price up '.$openTime;
                     } else {
                          Redis::set($changKey, self::DOWN_ONE); //跌 -1
-                         return 'mark price down';
+                         return 'mark price down '.$openTime;
                     }
                } else {
                     if ($change > 0) {  //涨
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
                          }
-                         return 'mark price up';
+                         return 'mark price up '.$openTime;
                     } elseif ($change < 0) {  //跌
                          if ($mark == self::UP) {
                               Redis::set($changKey, self::DOWN_ONE);
                               //一次跌并高于标记价卖出
                               $getSellPrice = Redis::get($sellPriceLineKey);
-                              if (is_null($getSellPrice)) return 'mark price down once';
+                              if (is_null($getSellPrice)) return 'mark price down once '.$openTime;
                               $currentPrice = OrderService::getOnePrice(PlatformService::BINANCE, $ticker);
                               if ($currentPrice < $getSellPrice) return 'current price less than sell price line';
                               //有未成交则不做
@@ -103,7 +104,7 @@ class StrategyService
                               return 'place sell order quantity '. $quantity . ' price ' . $getSellPrice;
                          } elseif ($mark == self::DOWN_ONE) {
                               Redis::set($changKey, self::DOWN_TWO);
-                              return 'mark price down twice';
+                              return 'mark price down twice '.$openTime;
                          } elseif ($mark == self::DOWN_TWO) {
                               //有单不交易
                               $orderId = Redis::get($haveOrderKey);
@@ -133,7 +134,7 @@ class StrategyService
                               return 'place buy order quantity '. $quantity . ' price ' . $buyPrice;
                          } else {
                               Redis::set($changKey, self::DOWN_MORE);
-                              return 'mark price down more'; //跌第四次及以上了
+                              return 'mark price down more '.$openTime; //跌第四次及以上了
                          }
                     } else {
                          return 'price not change';
