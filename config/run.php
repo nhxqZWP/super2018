@@ -3,13 +3,13 @@
 return [
      'get_platform' => 'binance',
      'get_platform_coin' => 'BTC/USDT',
-     'get_platform_key' => env('binance_key'),
-     'get_platform_secret' => env('binance_secret'),
+     'get_platform_key' => env('BINANCE_KEY'),
+     'get_platform_secret' => env('BINANCE_SECRET'),
      'do_trade' => [
           'binance' => [
                'symbol' => 'BTC/USDT',
-               'key' => env('binance_key'),
-               'secret' => env('binance_secret')
+               'key' => env('BINANCE_KEY'),
+               'secret' => env('BINANCE_SECRET')
           ]
      ]
 ];
