@@ -49,10 +49,12 @@ class OrderService
                $balance = $api->balances();
                $coin2 = $balance[$coins[1]]['available']; //usdt
                $price = $api->prices()[$ticker];
+//               $coin2 = 343.31896592;
+//               $price = 6337.95000000;
                $quantity = self::coinShow($coin2 / $price);
                $res = $api->buy($ticker, $quantity, $price);
                if (isset($res['msg'])) {
-                    return [$res['msg'], 0, '', 0];
+                    return [$res['msg'].' '.$ticker.' q: '.$quantity.' p: '.$price, 0, '', 0];
                }
                $orderId = $res['orderId'];
           }
@@ -74,7 +76,7 @@ class OrderService
                $quantity = $coin1;
                $res = $api->sell($ticker, $quantity, $price);
                if (isset($res['msg'])) {
-                    return [$res['msg'], 0, ''];
+                    return [$res['msg'].' '.$ticker.' q: '.$quantity.' p: '.$price, 0, ''];
                }
                $orderId = $res['orderId'];
           }
