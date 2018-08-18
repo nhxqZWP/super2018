@@ -49,8 +49,6 @@ class OrderService
                $balance = $api->balances();
                $coin2 = $balance[$coins[1]]['available']; //usdt
                $price = $api->prices()[$ticker];
-//               $coin2 = 343.31896592;
-//               $price = 6337.95000000;
                $quantity = self::coinShow($coin2 / $price);
                $res = $api->buy($ticker, $quantity, $price);
                if (isset($res['msg'])) {
@@ -72,8 +70,7 @@ class OrderService
                $api = new Binance($key, $secret);
                $balance = $api->balances();
                $coin1 = $balance[$coins[0]]['available']; //btc
-//               $quantity = self::coinShow($coin1);
-               $quantity = $coin1;
+               $quantity = self::coinShow($coin1);
                $res = $api->sell($ticker, $quantity, $price);
                if (isset($res['msg'])) {
                     return [$res['msg'].' '.$ticker.' q: '.$quantity.' p: '.$price, 0, ''];
@@ -117,12 +114,12 @@ class OrderService
      }
 
      // 币值格式化
-     public static function coinShow($num, $decPlace = 8)
+     public static function coinShow($num, $decPlace = 6)
      {
 //          if (empty($num)) {
 //               return number_format(0, $decPlace, '.', '');
 //          }
-          $numDeal = floor($num * pow(10,8)) / pow(10, 8);
+          $numDeal = floor($num * pow(10,6)) / pow(10, 6);
           return number_format($numDeal, $decPlace, '.', '');
      }
 
