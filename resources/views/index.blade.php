@@ -38,14 +38,23 @@
                     </td>
                 </tr>
             </table>
+            <br>
+            <table class="table table-striped">
+                <tr>
+                    <td>BTC</td>
+                    <td>USDT</td>
+                </tr>
+                <tr>
+                    <td><?php echo $coin1; ?></td>
+                    <td><?php echo $coin2; ?></td>
+                </tr>
+            </table>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
             <code><?php dd($info) ?></code>
-        </div>
-        <div class="col-md-6">
-
         </div>
     </div>
 </div>

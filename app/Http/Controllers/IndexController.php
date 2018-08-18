@@ -22,10 +22,10 @@ class IndexController extends Controller
           foreach ($exchangeInfo as $fo) {
                if ($fo['symbol'] == 'BTCUSDT') $info = $fo;
           }
-//          $balance = $api->balances();
-//          $coin1 = $balance['BTC'];
-//          $coin2 = $balance['USDT'];
-          return view('index', ['status' => $status, 'info' => $info]);
+          $balance = $api->balances();
+          $coin1 = $balance['BTC'];
+          $coin2 = $balance['USDT'];
+          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1, 'coin2' => $coin2]);
      }
 
      public function getSwitch(Request $request)
