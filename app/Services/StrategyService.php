@@ -12,7 +12,7 @@ class StrategyService
      const DOWN_TWO = -2; //跌两次
      const DOWN_MORE = -3; //跌三次及以上
      const BINANCE_FEE = 0.002;
-     const PROFIT_FEE_PERCENT = 0.002;
+     const PROFIT_FEE_PERCENT = 0.0015;
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
 
      //黑三兵后买 固定偏移卖 minute
