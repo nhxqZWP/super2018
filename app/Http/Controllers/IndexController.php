@@ -24,8 +24,16 @@ class IndexController extends Controller
           }
           $balance = $api->balances();
           $coin1 = $balance['BTC'];
+          $coin1Str = '';
+          foreach ($coin1 as $k => $c) {
+               $coin1Str .= $k .':'.$c."<br>";
+          }
           $coin2 = $balance['USDT'];
-          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1, 'coin2' => $coin2]);
+          $coin2Str = '';
+          foreach ($coin2 as $k => $c) {
+               $coin2Str .= $k .':'.$c."<br>";
+          }
+          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1Str, 'coin2' => $coin2Str]);
      }
 
      public function getSwitch(Request $request)
