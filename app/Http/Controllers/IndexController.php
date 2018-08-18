@@ -17,11 +17,15 @@ class IndexController extends Controller
           $status = Redis::get($key);
 
           $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-          $exchangeInfo =  $api->exchangeInfo();
+          $exchangeInfo =  $api->exchangeInfo()['symbols'];
+          $info = [];
+          foreach ($exchangeInfo as $fo) {
+               if ($fo['symbol'] == 'BTCUSDT') $info = $fo;
+          }
 //          $balance = $api->balances();
 //          $coin1 = $balance['BTC'];
 //          $coin2 = $balance['USDT'];
-          return view('index', ['status' => $status, 'info' => $exchangeInfo]);
+          return view('index', ['status' => $status, 'info' => $info]);
      }
 
      public function getSwitch(Request $request)
