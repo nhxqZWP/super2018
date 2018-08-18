@@ -37,10 +37,10 @@ class Kernel extends ConsoleKernel
          }
 
          $schedule->call(function () {
-              for ($i = 0; $i < 12; $i++) {
+              for ($i = 0; $i < 2; $i++) {
                    $result = StrategyService::BlackThree();
                    Log::debug($result);
-                   sleep(3);
+//                   sleep(1);
               }
          })->cron('* * * * *');
     }
