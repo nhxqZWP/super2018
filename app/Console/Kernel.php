@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
               for ($i = 0; $i < 2; $i++) {
                    $result = StrategyService::BlackThree();
                    Log::debug($result);
-//                   sleep(1);
+                   sleep(3);
               }
          })->cron('* * * * *');
     }
