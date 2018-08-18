@@ -133,9 +133,9 @@ class StrategyService
                               //标记卖单价
                               $sellPriceLinePrice = $buyPrice * (1 + self::BINANCE_FEE + $profitPercent);
                               Redis::set($sellPriceLineKey, $sellPriceLinePrice);
+                              Redis::set($changKey, self::DOWN_MORE);
                               return 'place buy order quantity '. $quantity . ' price ' . $buyPrice;
                          } else {
-                              Redis::set($changKey, self::DOWN_MORE);
                               return 'mark price down more '.$openTime.' '.$closePrice; //跌第四次及以上了
                          }
                     } else {
