@@ -10,7 +10,8 @@ class StrategyService
      const UP = 1; //涨 不分次数
      const DOWN_ONE = -1; //跌一次
      const DOWN_TWO = -2; //跌两次
-     const DOWN_MORE = -3; //跌三次及以上
+     const DOWN_THREEE = -3; //跌三次
+     const DOWN_MORE = -4; //跌四次及以上
      const BINANCE_FEE = 0.002;
      const PROFIT_FEE_PERCENT = 0.0015;
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
@@ -109,6 +110,9 @@ class StrategyService
                               Redis::set($changKey, self::DOWN_TWO);
                               return 'mark price down twice '.$openTime.' '.$closePrice;
                          } elseif ($mark == self::DOWN_TWO) {
+                              Redis::set($changKey, self::DOWN_THREEE);
+                              return 'mark price down third '.$openTime.' '.$closePrice;
+                         } elseif ($mark == self::DOWN_THREEE) {
                               //有单不交易
                               $orderId = Redis::get($haveOrderKey);
                               if (!is_null($orderId)) {
