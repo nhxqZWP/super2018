@@ -72,7 +72,8 @@ class StrategyService
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
                          }
-                         return 'mark price up '.$openTime.' '.$closePrice;
+                         $getSellPrice = Redis::get($sellPriceLineKey);
+                         return 'mark price up '.$openTime.' now:'.$closePrice.' sellLine:'.$getSellPrice;
                     } elseif ($change < 0) {  //跌
                          if ($mark == self::UP) {
                               Redis::set($changKey, self::DOWN_ONE);
