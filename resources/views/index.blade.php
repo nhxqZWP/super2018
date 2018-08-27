@@ -11,6 +11,7 @@
 </head>
 <body>
 <div class="container-fluid">
+    @foreach($data as $item)
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4" style="text-align: center;margin-top: 2%">
@@ -23,14 +24,14 @@
                 <tr>
                     <td>黑四兵(3m)</td>
                     <td>
-                        @if(is_null($status) || $status == 0)
+                        @if(is_null($item['status']) || $item['status'] == 0)
                             已关闭
                             @else
                             运行中
                         @endif
                     </td>
                     <td>
-                        @if(is_null($status) || $status == 0)
+                        @if(is_null($item['status']) || $item['status'] == 0)
                             <a href="/switch?key=three_down_btcusdt_minute&action=1" class="btn btn-success btn-sm" role="button">&nbsp;打开&nbsp;</a>
                         @else
                             <a href="/switch?key=three_down_btcusdt_minute&action=0" class="btn btn-danger btn-sm" role="button">&nbsp;关闭&nbsp;</a>
@@ -45,18 +46,19 @@
                     <td>USDT</td>
                 </tr>
                 <tr>
-                    <td><?php echo $coin1; ?></td>
-                    <td><?php echo $coin2; ?></td>
+                    <td><?php echo $item['coin1']; ?></td>
+                    <td><?php echo $item['coin2']; ?></td>
                 </tr>
             </table>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <code><?php dd($info) ?></code>
-        </div>
-    </div>
+    @endforeach
+    {{--<div class="row">--}}
+        {{--<div class="col-md-4"></div>--}}
+        {{--<div class="col-md-4">--}}
+            {{--<code><?php dd($info) ?></code>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 </div>
 
 <!-- Optional JavaScript -->

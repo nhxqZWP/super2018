@@ -16,24 +16,35 @@ class IndexController extends Controller
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
-          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-          $exchangeInfo =  $api->exchangeInfo()['symbols'];
-          $info = [];
-          foreach ($exchangeInfo as $fo) {
-               if ($fo['symbol'] == 'BTCUSDT') $info = $fo;
+          $data = [];
+          $doAccount = Config('run')['do_trade'];
+          foreach ($doAccount as $plat => $account) {
+               if (!empty($account['key'])) {
+                    $api = new Binance($account['key'], $account['secret']);
+                    $balance = $api->balances();
+                    $coin1 = $balance['BTC'];
+                    $coin1Str = '';
+                    foreach ($coin1 as $k => $c) {
+                         $coin1Str .= $k .':'.$c."<br>";
+                    }
+                    $coin2 = $balance['USDT'];
+                    $coin2Str = '';
+                    foreach ($coin2 as $k => $c) {
+                         $coin2Str .= $k .':'.$c."<br>";
+                    }
+                    $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str];
+               }
           }
-          $balance = $api->balances();
-          $coin1 = $balance['BTC'];
-          $coin1Str = '';
-          foreach ($coin1 as $k => $c) {
-               $coin1Str .= $k .':'.$c."<br>";
-          }
-          $coin2 = $balance['USDT'];
-          $coin2Str = '';
-          foreach ($coin2 as $k => $c) {
-               $coin2Str .= $k .':'.$c."<br>";
-          }
-          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1Str, 'coin2' => $coin2Str]);
+          return view('index', ['data' => $data]);
+
+//          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+//          $exchangeInfo =  $api->exchangeInfo()['symbols'];
+//          $info = [];
+//          foreach ($exchangeInfo as $fo) {
+//               if ($fo['symbol'] == 'BTCUSDT') $info = $fo;
+//          }
+
+//          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1Str, 'coin2' => $coin2Str]);
      }
 
      public function getSwitch(Request $request)

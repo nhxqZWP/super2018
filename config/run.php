@@ -8,8 +8,13 @@ return [
      'do_trade' => [
           'binance' => [
                'symbol' => 'BTC/USDT',
-               'key' => env('BINANCE_KEY'),
-               'secret' => env('BINANCE_SECRET')
+               'key' => env('BINANCE_KEY', ''),
+               'secret' => env('BINANCE_SECRET', '')
+          ],
+          'binance ' => [
+               'symbol' => 'BTC/USDT',
+               'key' => env('BINANCE_KEY2', ''),
+               'secret' => env('BINANCE_SECRET2', '')
           ]
      ]
 ];

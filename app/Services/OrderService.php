@@ -81,6 +81,28 @@ class OrderService
           return [null, $quantity, $orderId];
      }
 
+     //市场价格下卖单
+     public static function placeSellOrderByCurrentPrice($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $key, $secret)
+     {
+          $coins = explode('/', $symbol);
+          $ticker = $coins[0] . $coins[1];
+          $quantity = 0;
+          $orderId = '';
+          if ($platform == PlatformService::BINANCE) {
+               $api = new Binance($key, $secret);
+               $balance = $api->balances();
+               $coin1 = $balance[$coins[0]]['available']; //btc
+               $quantity = self::coinShow($coin1);
+               $price = $api->prices()[$ticker]; //币安获取的价格可以直接使用
+               $res = $api->sell($ticker, $quantity, $price);
+               if (isset($res['msg'])) {
+                    return [$res['msg'].' sell '.$ticker.' q: '.$quantity.' p: '.$price, 0, ''];
+               }
+               $orderId = $res['orderId'];
+          }
+          return [null, $quantity, $orderId];
+     }
+
      //下市场单
      public static function placeMarketOrder($ope = null, $platform = null, $symbol = null)
      {

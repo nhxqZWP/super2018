@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Platforms\Binance;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class StrategyService
@@ -13,7 +14,8 @@ class StrategyService
      const DOWN_THREEE = -3; //跌三次
      const DOWN_MORE = -4; //跌四次及以上
      const BINANCE_FEE = 0.002;
-     const PROFIT_FEE_PERCENT = 0.0015;
+     const PROFIT_FEE_PERCENT = 0.0012;
+     const STOP_LOSS_PRICE_DEL = 400; //差400usdt止损
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
 
      //黑三兵后买 固定偏移卖 minute
@@ -72,6 +74,35 @@ class StrategyService
                     if ($change > 0) {  //涨
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
+                              //判断是否到了止损价
+                              $getSellPrice = Redis::get($sellPriceLineKey);
+                              if (!is_null($getSellPrice)) { //有买单成交并标记了卖单
+                                   $changeL = $getSellPrice - $closePrice;
+                                   if ($changeL > self::STOP_LOSS_PRICE_DEL) {
+                                        //止损 卖出并消除卖单价标记
+                                        $quantity = 0;
+                                        $doAccount = Config('run')['do_trade'];
+                                        foreach ($doAccount as $plat => $account) {
+                                             if (!empty($account['key'])) {
+                                                  list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                                                  if ($plat === 'binance') {
+                                                       if (!is_null($orderRes)) {
+                                                            return $orderRes;
+                                                       }
+                                                       $quantityUsed = $quantity;
+                                                       $orderIdUsed = $orderId;
+                                                  } else {
+                                                       Log::debug('key2 place sell stop less  order quantity '. $quantity . ' price ' . $closePrice);
+                                                  }
+                                             }
+                                        }
+                                        //记录卖单id
+                                        Redis::set($haveOrderKey, $orderIdUsed);
+                                        //删除标记的卖单价格
+                                        Redis::del($sellPriceLineKey);
+                                        return 'place sell stop less order quantity '. $quantityUsed . ' price ' . $closePrice;
+                                   }
+                              }
                          }
                          $getSellPrice = Redis::get($sellPriceLineKey);
                          return 'mark price up '.$openTime.' now:'.$closePrice.' sellLine:'.$getSellPrice;
@@ -96,16 +127,24 @@ class StrategyService
                               $quantity = 0;
                               $doAccount = Config('run')['do_trade'];
                               foreach ($doAccount as $plat => $account) {
-                                   list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByGivenPrice($plat, $account['symbol'], $getSellPrice, $account['key'], $account['secret']);
-                                   if (!is_null($orderRes)) {
-                                        return $orderRes;
+                                   if (!empty($account['key'])) {
+                                        list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByGivenPrice(trim($plat), $account['symbol'], $getSellPrice, $account['key'], $account['secret']);
+                                        if ($plat === 'binance') {
+                                             if (!is_null($orderRes)) {
+                                                  return $orderRes;
+                                             }
+                                             $quantityUsed = $quantity;
+                                             $orderIdUsed = $orderId;
+                                        } else {
+                                             Log::debug('key2 place sell order quantity '. $quantity . ' price ' . $getSellPrice);
+                                        }
                                    }
                               }
                               //记录卖单id
-                              Redis::set($haveOrderKey, $orderId);
+                              Redis::set($haveOrderKey, $orderIdUsed);
                               //删除标记的卖单价格
                               Redis::del($sellPriceLineKey);
-                              return 'place sell order quantity '. $quantity . ' price ' . $getSellPrice;
+                              return 'place sell order quantity '. $quantityUsed . ' price ' . $getSellPrice;
                          } elseif ($mark == self::DOWN_ONE) {
                               Redis::set($changKey, self::DOWN_TWO);
                               return 'mark price down twice '.$openTime.' '.$closePrice;
@@ -124,22 +163,31 @@ class StrategyService
                                    }
                               }
 
-                              //跌三次后买
+                              //跌四次后买
                               $quantity = 0;
                               $doAccount = Config('run')['do_trade'];
                               foreach ($doAccount as $plat => $account) {
-                                   list($orderRes, $buyPrice, $orderId, $quantity) = OrderService::placeBuyOrderByCurrentPrice($plat, $account['symbol'], $account['key'], $account['secret']);
-                                   if (!is_null($orderRes)) {
-                                        return $orderRes;
+                                   if (!empty($account['key'])) {
+                                        list($orderRes, $buyPrice, $orderId, $quantity) = OrderService::placeBuyOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                                        if ($plat === 'binance') {
+                                             if (!is_null($orderRes)) {
+                                                  return $orderRes;
+                                             }
+                                             $buyPriceUsed = $buyPrice;
+                                             $quantityUsed = $quantity;
+                                             $orderIdUsed = $orderId;
+                                        } else {
+                                             Log::debug('key2 place buy order quantity '. $quantity . ' price ' . $buyPrice);
+                                        }
                                    }
                               }
                               //记录买单id
-                              Redis::set($haveOrderKey, $orderId);
+                              Redis::set($haveOrderKey, $orderIdUsed);
                               //标记卖单价
-                              $sellPriceLinePrice = $buyPrice * (1 + self::BINANCE_FEE + $profitPercent);
+                              $sellPriceLinePrice = $buyPriceUsed * (1 + self::BINANCE_FEE + $profitPercent);
                               Redis::set($sellPriceLineKey, $sellPriceLinePrice);
                               Redis::set($changKey, self::DOWN_MORE);
-                              return 'place buy order quantity '. $quantity . ' price ' . $buyPrice;
+                              return 'place buy order quantity '. $quantityUsed . ' price ' . $buyPriceUsed;
                          } else {
                               return 'mark price down more '.$openTime.' '.$closePrice; //跌第四次及以上了
                          }
