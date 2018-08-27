@@ -21,6 +21,7 @@ class IndexController extends Controller
           $i = 1;
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
+                    dd($account);
                     $api = new Binance($account['key'], $account['secret']);
                     $balance = $api->balances();
                     if ($i==2) {
