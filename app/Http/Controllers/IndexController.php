@@ -20,11 +20,10 @@ class IndexController extends Controller
           $doAccount = Config('run')['do_trade'];
           $i = 1;
           foreach ($doAccount as $plat => $account) {
-               dd($account);
                if (!empty($account['key'])) {
-                    dd($account);
                     $api = new Binance($account['key'], $account['secret']);
                     $balance = $api->balances();
+                    dd($balance);
                     if ($i==2) {
                          dd($balance);
                     }
