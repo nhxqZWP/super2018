@@ -21,24 +21,22 @@ class IndexController extends Controller
           $i = 1;
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
-                    continue ;
-                    $api = new Binance($account['key'], $account['secret']);
-                    $balance = $api->balances();
-                    dd($balance);
                     if ($i==2) {
+                         $api = new Binance($account['key'], $account['secret']);
+                         $balance = $api->balances();
                          dd($balance);
+                         $coin1 = $balance['BTC'];
+                         $coin1Str = '';
+                         foreach ($coin1 as $k => $c) {
+                              $coin1Str .= $k .':'.$c."<br>";
+                         }
+                         $coin2 = $balance['USDT'];
+                         $coin2Str = '';
+                         foreach ($coin2 as $k => $c) {
+                              $coin2Str .= $k .':'.$c."<br>";
+                         }
+                         $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str];
                     }
-                    $coin1 = $balance['BTC'];
-                    $coin1Str = '';
-                    foreach ($coin1 as $k => $c) {
-                         $coin1Str .= $k .':'.$c."<br>";
-                    }
-                    $coin2 = $balance['USDT'];
-                    $coin2Str = '';
-                    foreach ($coin2 as $k => $c) {
-                         $coin2Str .= $k .':'.$c."<br>";
-                    }
-                    $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str];
                }
                $i++;
           }
