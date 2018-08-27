@@ -18,9 +18,9 @@ class IndexController extends Controller
 
           $data = [];
           $doAccount = Config('run')['do_trade'];
-          dd($doAccount);
           $i = 1;
           foreach ($doAccount as $plat => $account) {
+               dd($account);
                if (!empty($account['key'])) {
                     dd($account);
                     $api = new Binance($account['key'], $account['secret']);
