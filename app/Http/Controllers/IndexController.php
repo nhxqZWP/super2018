@@ -18,6 +18,7 @@ class IndexController extends Controller
 
           $data = [];
           $doAccount = Config('run')['do_trade'];
+          dd($doAccount);
           $i = 1;
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
