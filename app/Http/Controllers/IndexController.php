@@ -23,7 +23,6 @@ class IndexController extends Controller
                if (!empty($account['key'])) {
                     $api = new Binance($account['key'], $account['secret']);
                     $balance = $api->balances();
-                    dd($balance);
                     if ($i==2) {
                          dd($balance);
                     }
