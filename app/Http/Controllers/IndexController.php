@@ -18,13 +18,10 @@ class IndexController extends Controller
 
           $data = [];
           $doAccount = Config('run')['do_trade'];
-          $i = 1;
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
-                    if ($i==2) {
                          $api = new Binance($account['key'], $account['secret']);
                          $balance = $api->balances();
-                         dd($balance);
                          $coin1 = $balance['BTC'];
                          $coin1Str = '';
                          foreach ($coin1 as $k => $c) {
@@ -36,9 +33,7 @@ class IndexController extends Controller
                               $coin2Str .= $k .':'.$c."<br>";
                          }
                          $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str];
-                    }
                }
-               $i++;
           }
           return view('index', ['data' => $data]);
 
