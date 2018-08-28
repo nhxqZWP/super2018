@@ -22,7 +22,7 @@
                     <td>操作</td>
                 </tr>
                 <tr>
-                    <td>黑四兵(3m)</td>
+                    <td>黑三兵(3m)</td>
                     <td>
                         @if(is_null($item['status']) || $item['status'] == 0)
                             已关闭

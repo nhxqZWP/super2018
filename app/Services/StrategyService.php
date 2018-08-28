@@ -149,9 +149,9 @@ class StrategyService
                               Redis::set($changKey, self::DOWN_TWO);
                               return 'mark price down twice '.$openTime.' '.$closePrice;
                          } elseif ($mark == self::DOWN_TWO) {
-                              Redis::set($changKey, self::DOWN_THREEE);
-                              return 'mark price down third '.$openTime.' '.$closePrice;
-                         } elseif ($mark == self::DOWN_THREEE) {
+//                              Redis::set($changKey, self::DOWN_THREEE);
+//                              return 'mark price down third '.$openTime.' '.$closePrice;
+//                         } elseif ($mark == self::DOWN_THREEE) {
                               //有单不交易
                               $orderId = Redis::get($haveOrderKey);
                               if (!is_null($orderId)) {
