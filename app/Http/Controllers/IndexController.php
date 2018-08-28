@@ -32,7 +32,12 @@ class IndexController extends Controller
                          foreach ($coin2 as $k => $c) {
                               $coin2Str .= $k .':'.$c."<br>";
                          }
-                         $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str];
+                         $coin3 = $balance['BNB'];
+                         $coin3Str = '';
+                         foreach ($coin3 as $k => $c) {
+                              $coin3Str .= $k .':'.$c."<br>";
+                         }
+                         $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str];
                }
           }
           return view('index', ['data' => $data]);
