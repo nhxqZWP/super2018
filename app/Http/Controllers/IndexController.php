@@ -16,7 +16,7 @@ class IndexController extends Controller
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
-          $data = [];
+          $data['list'] = [];
           $doAccount = Config('run')['do_trade'];
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
@@ -37,17 +37,21 @@ class IndexController extends Controller
                          foreach ($coin3 as $k => $c) {
                               $coin3Str .= $k .':'.$c."<br>";
                          }
-                         $data[] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str];
+                         $data['list'][] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str];
                }
           }
-          return view('index', ['data' => $data]);
 
-//          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-//          $exchangeInfo =  $api->exchangeInfo()['symbols'];
-//          $info = [];
-//          foreach ($exchangeInfo as $fo) {
-//               if ($fo['symbol'] == 'BTCUSDT') $info = $fo;
-//          }
+          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+          $exchangeInfo =  $api->exchangeInfo()['symbols'];
+          $infoBTC = []; $infoEOS = [];
+          foreach ($exchangeInfo as $fo) {
+               if ($fo['symbol'] == 'BTCUSDT') $infoBTC = $fo;
+               if ($fo['symbol'] == 'EOSUSDT') $infoEOS = $fo;
+          }
+          $data['BTC'] = $infoBTC;
+          $data['EOS'] = $infoEOS;
+
+          return view('index', ['data' => $data]);
 
 //          return view('index', ['status' => $status, 'info' => $info, 'coin1' => $coin1Str, 'coin2' => $coin2Str]);
      }

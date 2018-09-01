@@ -11,10 +11,9 @@
 </head>
 <body>
 <div class="container-fluid">
-    @foreach($data as $item)
     <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4" style="text-align: center;margin-top: 2%">
+        @foreach($data['list'] as $item)
+        <div class="col-md-6" style="text-align: center;margin-top: 2%">
             <table class="table table-striped">
                 <tr>
                     <td>策略</td>
@@ -53,8 +52,16 @@
                 </tr>
             </table>
         </div>
+        @endforeach
     </div>
-    @endforeach
+    <div class="row">
+        <div class="col-md-6" style="text-align: center;margin-top: 2%">
+            {{print_r($data['BTC'])}}
+        </div>
+        <div class="col-md-6" style="text-align: center;margin-top: 2%">
+            {{print_r($data['EOS'])}}
+        </div>
+    </div>
 
 </div>
 
