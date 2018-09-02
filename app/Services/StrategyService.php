@@ -267,6 +267,8 @@ class StrategyService
                                    Redis::set($haveOrderKey, $orderIdUsed);
                                    //删除标记的卖单价格
                                    Redis::del($sellPriceLineKey);
+                                   //删除标记的12h止损价
+                                   PlatformService::delLowestPriceSince();
                                    return 'place sell stop less order quantity '. $quantityUsed . ' price ' . $closePrice;
                               }
                          }
