@@ -203,7 +203,7 @@ class StrategyService
      }
 
 
-     //黑三兵后买 固定偏移卖 5min 低于最近12小时最低点卖
+     //黑三兵后买 固定偏移卖 5min 低于最近12小时最低点卖 EOS/USDT：价格小数点后4位 数量小数点后2位
      public static function BlackThree2($platform = PlatformService::BINANCE, $symbol = 'EOS/USDT', $period = '5m', $profitPercent = self::PROFIT_FEE_PERCENT)
      {
           date_default_timezone_set('PRC');
@@ -245,7 +245,11 @@ class StrategyService
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
                               //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
-                              // todo
+                              // TODO
+
+
+
+
                               $getSellPrice = Redis::get($sellPriceLineKey);
                               if (!is_null($getSellPrice)) { //有买单成交并标记了卖单
                                    $changeL = $getSellPrice - $closePrice;

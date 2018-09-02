@@ -49,7 +49,7 @@ class OrderService
                $balance = $api->balances();
                $coin2 = $balance[$coins[1]]['available']; //usdt
                $price = $api->prices()[$ticker]; //币安获取的价格可以直接使用
-               $quantity = self::coinShow($coin2 / $price);
+               $quantity = self::coinShow($ticker,$coin2 / $price);
                $res = $api->buy($ticker, $quantity, $price);
                if (isset($res['msg'])) {
                     return [$res['msg'].' buy '.$ticker.' q: '.$quantity.' p: '.$price, 0, '', 0];
@@ -70,8 +70,8 @@ class OrderService
                $api = new Binance($key, $secret);
                $balance = $api->balances();
                $coin1 = $balance[$coins[0]]['available']; //btc
-               $quantity = self::coinShow($coin1);
-               $price = self::coinShowUsdt($price);
+               $quantity = self::coinShow($ticker, $coin1);
+               $price = self::coinShowUsdt($ticker, $price);
                $res = $api->sell($ticker, $quantity, $price);
                if (isset($res['msg'])) {
                     return [$res['msg'].' sell '.$ticker.' q: '.$quantity.' p: '.$price, 0, ''];
@@ -92,7 +92,7 @@ class OrderService
                $api = new Binance($key, $secret);
                $balance = $api->balances();
                $coin1 = $balance[$coins[0]]['available']; //btc
-               $quantity = self::coinShow($coin1);
+               $quantity = self::coinShow($ticker, $coin1);
                $price = $api->prices()[$ticker]; //币安获取的价格可以直接使用
                $res = $api->sell($ticker, $quantity, $price);
                if (isset($res['msg'])) {
@@ -136,21 +136,27 @@ class OrderService
           return 0;
      }
 
-     // 币值格式化 btc卖价
-     public static function coinShow($num, $decPlace = 6)
+     // 币值格式化 btc eos数量
+     public static function coinShow($ticker, $num, $decPlace = 6)
      {
-//          if (empty($num)) {
-//               return number_format(0, $decPlace, '.', '');
-//          }
-          $numDeal = floor($num * pow(10,6)) / pow(10, 6);
+          if ($ticker == 'BTCUSDT') {
+               $decPlace = 6;
+          } elseif ($ticker == 'EOSUSDT') {
+               $decPlace = 2;
+          }
+          $numDeal = floor($num * pow(10,$decPlace)) / pow(10, $decPlace);
           return number_format($numDeal, $decPlace, '.', '');
      }
 
-     // 币价格式化 usdt买价
-     public static function coinShowUsdt($num, $decPlace = 2)
+     // 币价格式化 usdt数量(btc eos)
+     public static function coinShowUsdt($ticker, $num, $decPlace = 2)
      {
-          $numDeal = ceil($num * pow(10,2)) / pow(10, 2);
+          if ($ticker == 'BTCUSDT') {
+               $decPlace = 2;
+          } elseif ($ticker == 'EOSUSDT') {
+               $decPlace = 4;
+          }
+          $numDeal = floor($num * pow(10,$decPlace)) / pow(10, $decPlace);
           return number_format($numDeal, $decPlace, '.', '');
      }
-
 }

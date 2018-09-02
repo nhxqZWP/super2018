@@ -13,6 +13,10 @@ class IndexController extends Controller
 
      public function getIndex()
      {
+          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+          $data = $api->candlesticks('EOSUSDT', '12h');
+          dd($data);
+
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
