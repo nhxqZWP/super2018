@@ -60,6 +60,7 @@
             <div class="col-md-6" style="text-align: center;margin-top: 2%">
                 <table class="table table-striped">
                     <tr>
+                        <td>type</td>
                         <td>price</td>
                         <td>quantity</td>
                         <td>commission</td>
@@ -68,6 +69,7 @@
                     </tr>
                     @foreach($item['history'] as $e)
                     <tr>
+                        <td>{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
                         <td>{{$e['price']}}</td>
                         <td>{{$e['qty']}}</td>
                         <td>{{$e['commission']}}</td>
