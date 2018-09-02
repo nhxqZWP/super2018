@@ -46,7 +46,7 @@ class IndexController extends Controller
 
                     $api = new Binance($account['key'], $account['secret']);
                     $history = $api->history('EOSUSDT', 100);
-
+dd($history);
                     $data['list'][] = ['status' => $status, 'history' => array_reverse($history),'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
                }
           }
