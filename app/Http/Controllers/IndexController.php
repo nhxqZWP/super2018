@@ -13,7 +13,9 @@ class IndexController extends Controller
 
      public function getIndex()
      {
-          PlatformService::setLowestPriceSince();
+          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+          $history = $api->history('EOSUSDT', 100);
+          dd($history);
 
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
