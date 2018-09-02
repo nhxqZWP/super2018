@@ -43,6 +43,10 @@ class Kernel extends ConsoleKernel
                    sleep(3);
               }
          })->cron('* * * * *');
+
+         $schedule->call(function () {
+
+         })->everyTenMinutes();
     }
 
     /**
