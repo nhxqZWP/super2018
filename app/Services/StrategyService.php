@@ -14,7 +14,7 @@ class StrategyService
      const DOWN_THREEE = -3; //跌三次
      const DOWN_MORE = -4; //跌四次及以上
      const BINANCE_FEE = 0.002;
-     const PROFIT_FEE_PERCENT = 0.0012;
+     const PROFIT_FEE_PERCENT = 0.001;
      const STOP_LOSS_PRICE_DEL = 400; //差400usdt止损
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
 
@@ -245,38 +245,29 @@ class StrategyService
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
                               //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
-                              // TODO
-
-
-
-
-                              $getSellPrice = Redis::get($sellPriceLineKey);
-                              if (!is_null($getSellPrice)) { //有买单成交并标记了卖单
-                                   $changeL = $getSellPrice - $closePrice;
-                                   if ($changeL > self::STOP_LOSS_PRICE_DEL) {
-                                        //止损 卖出并消除卖单价标记
-                                        $quantity = 0;
-                                        $doAccount = Config('run')['do_trade'];
-                                        foreach ($doAccount as $plat => $account) {
-                                             if (!empty($account['key'])) {
-                                                  list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
-                                                  if ($plat === 'binance') {
-                                                       if (!is_null($orderRes)) {
-                                                            return $orderRes;
-                                                       }
-                                                       $quantityUsed = $quantity;
-                                                       $orderIdUsed = $orderId;
-                                                  } else {
-                                                       Log::debug('key2 place sell stop less  order quantity '. $quantity . ' price ' . $closePrice);
+                              $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker, '12h');
+                              if ($change) {
+                                   $quantity = 0;
+                                   $doAccount = Config('run')['do_trade2'];
+                                   foreach ($doAccount as $plat => $account) {
+                                        if (!empty($account['key'])) {
+                                             list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                                             if ($plat === 'binance') {
+                                                  if (!is_null($orderRes)) {
+                                                       return $orderRes;
                                                   }
+                                                  $quantityUsed = $quantity;
+                                                  $orderIdUsed = $orderId;
+                                             } else {
+                                                  Log::debug('key2 place sell stop less  order quantity '. $quantity . ' price ' . $closePrice);
                                              }
                                         }
-                                        //记录卖单id
-                                        Redis::set($haveOrderKey, $orderIdUsed);
-                                        //删除标记的卖单价格
-                                        Redis::del($sellPriceLineKey);
-                                        return 'place sell stop less order quantity '. $quantityUsed . ' price ' . $closePrice;
                                    }
+                                   //记录卖单id
+                                   Redis::set($haveOrderKey, $orderIdUsed);
+                                   //删除标记的卖单价格
+                                   Redis::del($sellPriceLineKey);
+                                   return 'place sell stop less order quantity '. $quantityUsed . ' price ' . $closePrice;
                               }
                          }
                          $getSellPrice = Redis::get($sellPriceLineKey);

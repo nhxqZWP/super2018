@@ -22,12 +22,12 @@ class PlatformService
           return Config('run')['get_platform_secret'];
      }
 
-     static function getLowestPriceSinceKey($ticker, $period = '12h', $platform = self::BINANCE)
+     static function getLowestPriceSinceKey($ticker = 'EOSUSDT', $period = '12h', $platform = self::BINANCE)
      {
           return $platform . $ticker . $period . 'lowest';
      }
 
-     static function delLowestPriceSince($ticker, $period = '12h', $platform = self::BINANCE)
+     static function delLowestPriceSince($ticker = 'EOSUSDT', $period = '12h', $platform = self::BINANCE)
      {
           $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
           Redis::del($key);
@@ -55,7 +55,7 @@ class PlatformService
           }
      }
 
-     static function getIsLowerThanLowestPrice($price, $ticker, $period = '12h', $platform = self::BINANCE)
+     static function getIsLowerThanLowestPrice($price, $ticker = 'EOSUSDT', $period = '12h', $platform = self::BINANCE)
      {
           $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
           $markPrice = Redis::get($key);

@@ -39,14 +39,15 @@ class Kernel extends ConsoleKernel
 
          $schedule->call(function () {
               for ($i = 0; $i < 2; $i++) {
-                   $result = StrategyService::BlackThree();
+//                   $result = StrategyService::BlackThree();
+                   $result = StrategyService::BlackThree2();
                    Log::debug($result);
                    sleep(3);
               }
          })->cron('* * * * *');
 
          $schedule->call(function () {
-//               PlatformService::setLowestPriceSince(); //eos
+               PlatformService::setLowestPriceSince(); //eos
          })->everyFifteenMinutes();
     }
 

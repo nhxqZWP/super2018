@@ -39,7 +39,12 @@ class IndexController extends Controller
                          foreach ($coin3 as $k => $c) {
                               $coin3Str .= $k .':'.$c."<br>";
                          }
-                         $data['list'][] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str];
+                         $coin4 = $balance['EOS'];
+                         $coin4Str = '';
+                         foreach ($coin4 as $k => $c) {
+                              $coin4Str .= $k .':'.$c."<br>";
+                         }
+                         $data['list'][] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
                }
           }
 

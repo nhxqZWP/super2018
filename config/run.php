@@ -19,7 +19,7 @@ return [
      ],
      'do_trade2' => [
           'binance' => [
-               'symbol' => 'BTC/USDT',
+               'symbol' => 'EOS/USDT',
                'key' => env('BINANCE_KEY', ''),
                'secret' => env('BINANCE_SECRET', '')
           ],
