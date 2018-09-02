@@ -16,7 +16,7 @@ class IndexController extends Controller
           $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
           $history = $api->history('EOSUSDT', 100);
 
-          dd(date('Y-m-d H:i:s', 1534601523440));
+          dd(date('Y-m-d H:i:s', ceil(1534601523440/1000)));
 
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
