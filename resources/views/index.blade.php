@@ -41,13 +41,11 @@
             <br>
             <table class="table table-striped">
                 <tr>
-                    <td>BTC</td>
                     <td>EOS</td>
                     <td>USDT</td>
                     <td>BNB</td>
                 </tr>
                 <tr>
-                    {{--<td><?php echo $item['coin1']; ?></td>--}}
                     <td><?php echo $item['coin4']; ?></td>
                     <td><?php echo $item['coin2']; ?></td>
                     <td><?php echo $item['coin3']; ?></td>
