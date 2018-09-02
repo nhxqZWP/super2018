@@ -13,6 +13,7 @@ class IndexController extends Controller
 
      public function getIndex()
      {
+          date_default_timezone_set('PRC');
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
