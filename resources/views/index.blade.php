@@ -54,6 +54,32 @@
         </div>
         @endforeach
     </div>
+
+    <div class="row">
+        @foreach($data['list'] as $item)
+            <div class="col-md-6" style="text-align: center;margin-top: 2%">
+                <table class="table table-striped">
+                    <tr>
+                        <td>price</td>
+                        <td>quantity</td>
+                        <td>commission</td>
+                        <td>asset</td>
+                        <td>time</td>
+                    </tr>
+                    @foreach($item['history'] as $e)
+                    <tr>
+                        <td>{{$e['price']}}</td>
+                        <td>{{$e['qty']}}</td>
+                        <td>{{$e['commission']}}</td>
+                        <td>{{$e['commissionAsset']}}</td>
+                        <td>{{date('m-d H:i:s', ceil($e['time']/1000))}}</td>
+                    </tr>
+                    @endforeach
+                </table>
+            </div>
+        @endforeach
+    </div>
+
     <div class="row">
         <div class="col-md-6" style="text-align: center;margin-top: 2%">
             {{print_r($data['BTC'])}}

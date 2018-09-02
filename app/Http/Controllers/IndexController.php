@@ -13,11 +13,6 @@ class IndexController extends Controller
 
      public function getIndex()
      {
-          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-          $history = $api->history('EOSUSDT', 100);
-dd($history);
-          dd(date('Y-m-d H:i:s', ceil(1534601523440/1000)));
-
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
@@ -26,6 +21,7 @@ dd($history);
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
                          $api = new Binance($account['key'], $account['secret']);
+
                          $balance = $api->balances();
                          $coin1 = $balance['BTC'];
                          $coin1Str = '';
@@ -47,7 +43,11 @@ dd($history);
                          foreach ($coin4 as $k => $c) {
                               $coin4Str .= $k .':'.$c."<br>";
                          }
-                         $data['list'][] = ['status' => $status, 'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
+
+                    $api = new Binance($account['key'], $account['secret']);
+                    $history = $api->history('EOSUSDT', 100);
+
+                    $data['list'][] = ['status' => $status, 'history' => $history,'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
                }
           }
 
