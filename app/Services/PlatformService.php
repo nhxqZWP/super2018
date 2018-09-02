@@ -42,10 +42,10 @@ class PlatformService
 
                $timeStampKey = $platform . $ticker . $period . 'timestamp';
                $timeStampSave = Redis::get($timeStampKey);
-               if (is_null($timeStampSave)) {
-                    Redis::set($timeStampKey, $last['openTime']);
-                    return null;
-               }
+//               if (is_null($timeStampSave)) {
+//                    Redis::set($timeStampKey, $last['openTime']);
+//                    return null;
+//               }
                if ($timeStampSave == $last['openTime']) return null;
                Redis::set($timeStampKey, $last['openTime']);
 
