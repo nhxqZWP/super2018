@@ -47,19 +47,19 @@ class IndexController extends Controller
                     $api = new Binance($account['key'], $account['secret']);
                     $history = $api->history('EOSUSDT', 100);
 
-                    $data['list'][] = ['status' => $status, 'history' => $history,'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
+                    $data['list'][] = ['status' => $status, 'history' => array_reverse($history),'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
                }
           }
 
-          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
-          $exchangeInfo =  $api->exchangeInfo()['symbols'];
-          $infoBTC = []; $infoEOS = [];
-          foreach ($exchangeInfo as $fo) {
-               if ($fo['symbol'] == 'BTCUSDT') $infoBTC = $fo;
-               if ($fo['symbol'] == 'EOSUSDT') $infoEOS = $fo;
-          }
-          $data['BTC'] = $infoBTC;
-          $data['EOS'] = $infoEOS;
+//          $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
+//          $exchangeInfo =  $api->exchangeInfo()['symbols'];
+//          $infoBTC = []; $infoEOS = [];
+//          foreach ($exchangeInfo as $fo) {
+//               if ($fo['symbol'] == 'BTCUSDT') $infoBTC = $fo;
+//               if ($fo['symbol'] == 'EOSUSDT') $infoEOS = $fo;
+//          }
+//          $data['BTC'] = $infoBTC;
+//          $data['EOS'] = $infoEOS;
 
           return view('index', ['data' => $data]);
 
