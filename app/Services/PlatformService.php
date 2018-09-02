@@ -27,22 +27,45 @@ class PlatformService
           return $platform . $ticker . $period . 'lowest';
      }
 
-     static function markLowestPriceSinceDo($ticker, $period = '12h', $platform = self::BINANCE)
+     static function delLowestPriceSince($ticker, $period = '12h', $platform = self::BINANCE)
      {
-          $key = $platform . $ticker . $period . 'lowest_do';
-          Redis::set($key);
+          $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
+          Redis::del($key);
      }
 
-     static function setLowestPriceSince($ticker, $period = '12h', $platform = self::BINANCE)
+     static function setLowestPriceSince($ticker = 'EOSUSDT', $period = '12h', $platform = self::BINANCE)
      {
           if ($platform == self::BINANCE) {
                $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
                $data = $api->candlesticks($ticker, $period);
-               $lowest = array_reverse($data)[1]['low'];
+               $last = array_reverse($data)[1];
+
+               $timeStampKey = $platform . $ticker . $period . 'timestamp';
+               $timeStampSave = Redis::get($timeStampKey);
+               if (is_null($timeStampSave)) {
+                    Redis::set($timeStampKey, $last['openTime']);
+                    return null;
+               }
+               if ($timeStampSave == $last['openTime']) return null;
+               Redis::set($timeStampKey, $last['openTime']);
+
+               $lowest = $last['low'];
                $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
                Redis::set($key, $lowest);
           }
      }
 
+     static function getIsLowerThanLowestPrice($price, $ticker, $period = '12h', $platform = self::BINANCE)
+     {
+          $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
+          $markPrice = Redis::get($key);
+          if (is_null($markPrice)) return false;
+
+          if ($price < $markPrice) {
+               return true;
+          } else {
+               return false;
+          }
+     }
 
 }

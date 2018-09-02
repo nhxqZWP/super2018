@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Services\OrderService;
+use App\Services\PlatformService;
 use App\Services\StrategyService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -45,8 +46,8 @@ class Kernel extends ConsoleKernel
          })->cron('* * * * *');
 
          $schedule->call(function () {
-
-         })->everyTenMinutes();
+//               PlatformService::setLowestPriceSince(); //eos
+         })->everyFifteenMinutes();
     }
 
     /**

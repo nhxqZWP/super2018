@@ -13,6 +13,8 @@ class IndexController extends Controller
 
      public function getIndex()
      {
+          PlatformService::setLowestPriceSince();
+
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
