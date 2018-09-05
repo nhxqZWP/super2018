@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Platforms\Binance;
 use App\Services\PlatformService;
 use App\Services\StrategyService;
+use App\Services\TargetService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -13,6 +14,9 @@ class IndexController extends Controller
 
      public function getIndex()
      {
+          $macd = TargetService::getMACD();
+          dd($macd);
+
           date_default_timezone_set('PRC');
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
