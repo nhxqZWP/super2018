@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
          $key = StrategyService::THREE_DOWN_BTCUSDT;
          $status = Redis::get($key);
          if (is_null($status) || $status == 0) {
-              Log::debug('not open three down');
+              Log::debug('not open');
               return null;
          }
 
@@ -46,9 +46,15 @@ class Kernel extends ConsoleKernel
               }
          })->cron('* * * * *');
 
-         $schedule->call(function () {
-               PlatformService::setLowestPriceSince(); //eos
-         })->everyFifteenMinutes();
+//         $schedule->call(function () {
+//               for ($i = 0; $i < 10; $i++) {
+//                    $log = StrategyService::changeMACD();
+//                    if (!is_null($log)) {
+//                         Log::debug($log);
+//                    }
+//                    sleep(5);
+//               }
+//         })->cron('* * * * *');
     }
 
     /**

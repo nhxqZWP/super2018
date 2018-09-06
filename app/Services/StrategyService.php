@@ -366,4 +366,80 @@ class StrategyService
           //return no ope
           return 'not is binance';
      }
+
+     //macd底与负多少后上涨买入，高于正多少后下降卖出
+     public static function changeMACD($platform = PlatformService::BINANCE, $symbol = 'EOS/USDT', $period = '15m')
+     {
+          date_default_timezone_set('PRC');
+          $ticker = implode('', explode('/', $symbol));
+          $key = $platform.$ticker.$period.'macd';
+          $macds = TargetService::getMACD($ticker, $period, 10);
+          $markTime = Redis::get($key);
+          $timeStamp = $macds[1]['timestamp'];
+          //macd没变化
+          if (!is_null($markTime) && $markTime == $timeStamp) return null;
+
+          //macd有变化
+          $nowMACD = $macds[1]['macd'];
+          $preMACD = $macds[2]['macd'];
+          $lowLine = -0.004; //eos 15min
+          $highLine = 0.007; //eos 15min
+          $haveOrderBuyKey = $platform . $ticker . $period . 'have_buy_order';
+          $haveOrderSellKey = $platform . $ticker . $period . 'have_sell_order';
+
+          if($preMACD < $lowLine && $nowMACD > $preMACD) {
+               //下买单
+               $buyOrderHave = Redis::get($haveOrderBuyKey);
+               if (!is_null($buyOrderHave)) return 'have made buy order '.$nowMACD;
+               $doAccount = Config('run')['do_trade'];
+
+               foreach ($doAccount as $plat => $account) {
+                    if (!empty($account['key'])) {
+                         list($orderRes, $buyPrice, $orderId, $quantity) = OrderService::placeBuyOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                         if ($plat === 'binance') {
+                              if (!is_null($orderRes)) {
+                                   return $orderRes;
+                              }
+                              $buyPriceUsed = $buyPrice;
+                              $quantityUsed = $quantity;
+                              $orderIdUsed = $orderId;
+                         } else {
+                              Log::debug('key2 place buy order quantity '. $quantity . ' price ' . $buyPrice);
+                         }
+                    }
+               }
+               //记录买单id
+               Redis::set($haveOrderBuyKey, $orderIdUsed);
+               //删除卖单id 可以下卖单了
+               Redis::del($haveOrderSellKey);
+               return 'place buy order quantity '. $quantityUsed . ' price ' . $buyPriceUsed;
+          } elseif($preMACD > $highLine && $nowMACD < $preMACD) {
+               //下卖单
+               $sellOrderHave = Redis::get($haveOrderSellKey);
+               if (!is_null($sellOrderHave)) return 'have made sell order '.$nowMACD;
+
+               $doAccount = Config('run')['do_trade2'];
+               foreach ($doAccount as $plat => $account) {
+                    if (!empty($account['key'])) {
+                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByGivenPrice(trim($plat), $account['symbol'], $getSellPrice, $account['key'], $account['secret']);
+                         if ($plat === 'binance') {
+                              if (!is_null($orderRes)) {
+                                   return $orderRes;
+                              }
+                              $quantityUsed = $quantity;
+                              $orderIdUsed = $orderId;
+                         } else {
+                              Log::debug('key2 place sell order quantity '. $quantity . ' price ' . $getSellPrice);
+                         }
+                    }
+               }
+               //记录卖单id
+               Redis::set($haveOrderSellKey, $orderIdUsed);
+               //删掉买单id 可以下买单了
+               Redis::del($haveOrderBuyKey);
+               return 'place sell order quantity '. $quantityUsed . ' price ' . $getSellPrice;
+          } else {
+               return $nowMACD;
+          }
+     }
 }
