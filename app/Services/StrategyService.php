@@ -373,7 +373,7 @@ class StrategyService
           date_default_timezone_set('PRC');
           $ticker = implode('', explode('/', $symbol));
           $key = $platform.$ticker.$period.'macd';
-          $macds = TargetService::getMACD($ticker, $period, 10);
+          $macds = TargetService::getMACD($ticker, $period);
           $markTime = Redis::get($key);
           $timeStamp = $macds[1]['timestamp'];
           //macd没变化
