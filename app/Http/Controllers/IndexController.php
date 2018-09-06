@@ -14,7 +14,7 @@ class IndexController extends Controller
 
      public function getIndex()
      {
-          $macd = TargetService::getMACD();
+          $macd = TargetService::getMACD('EOSUSDT', '15m');
           dd($macd);
 
           date_default_timezone_set('PRC');
