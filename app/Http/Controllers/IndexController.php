@@ -19,13 +19,13 @@ class IndexController extends Controller
           foreach ($doAccount as $plat => $account) {
                if (!empty($account['key'])) {
                     list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
-                    if ($plat === 'binance') {
-                         if (!is_null($orderRes)) {
-                              return $orderRes;
-                         }
-                    } else {
-                         Log::debug('key2 place sell stop less  order quantity ' . $quantity . ' price ');
-                    }
+//                    if ($plat === 'binance') {
+//                         if (!is_null($orderRes)) {
+//                              return $orderRes;
+//                         }
+//                    } else {
+//                         Log::debug('key2 place sell stop less  order quantity ' . $quantity . ' price ');
+//                    }
                }
           }
           dd('ok');
