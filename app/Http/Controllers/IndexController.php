@@ -15,20 +15,13 @@ class IndexController extends Controller
 
      public function getIndex()
      {
-          $doAccount = Config('run')['do_trade'];
-          foreach ($doAccount as $plat => $account) {
-               if (!empty($account['key'])) {
-                    list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
-//                    if ($plat === 'binance') {
-//                         if (!is_null($orderRes)) {
-//                              return $orderRes;
-//                         }
-//                    } else {
-//                         Log::debug('key2 place sell stop less  order quantity ' . $quantity . ' price ');
-//                    }
-               }
-          }
-          dd('ok');
+//          $doAccount = Config('run')['do_trade'];
+//          foreach ($doAccount as $plat => $account) {
+//               if (!empty($account['key'])) {
+//                    list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+//               }
+//          }
+//          dd('ok');
 
           date_default_timezone_set('PRC');
           $key = StrategyService::THREE_DOWN_BTCUSDT;

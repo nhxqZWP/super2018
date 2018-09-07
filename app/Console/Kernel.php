@@ -46,19 +46,19 @@ class Kernel extends ConsoleKernel
 //              }
 //         })->cron('* * * * *');
 
-//         $schedule->call(function () {
-//               for ($i = 0; $i < 10; $i++) {
-//                    $log = StrategyService::changeMACD();
-//                    if (!is_null($log)) {
-//                         Log::debug($log);
-//                    }
-//                    sleep(5);
-//               }
-//         })->cron('* * * * *');
-//
-//         $schedule->call(function () {
-//             PlatformService::setLowestPriceSince('EOSUSDT', '12h');
-//         })->cron('* * * * *');
+         $schedule->call(function () {
+               for ($i = 0; $i < 10; $i++) {
+                    $log = StrategyService::changeMACD();
+                    if (!is_null($log)) {
+                         Log::debug($log);
+                    }
+                    sleep(5);
+               }
+         })->cron('* * * * *');
+
+         $schedule->call(function () {
+             PlatformService::setLowestPriceSince('EOSUSDT', '12h');
+         })->cron('* * * * *');
     }
 
     /**
