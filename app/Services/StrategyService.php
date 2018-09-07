@@ -372,6 +372,45 @@ class StrategyService
      {
           date_default_timezone_set('PRC');
           $ticker = implode('', explode('/', $symbol));
+          $haveOrderBuyKey = $platform . $ticker . $period . 'have_buy_order';
+          $haveOrderSellKey = $platform . $ticker . $period . 'have_sell_order';
+
+          //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
+          $api = new Binance(Config('run')['get_platform_key'], Config('run')['get_platform_secret']);
+          $ticks = $api->candlesticks($ticker, '1m');
+          $endSecond = array_slice($ticks,-2,1)[0];
+          $closePrice = $endSecond['close'];
+          $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker, '12h');
+          if ($change) { //如果到了止损价
+               //没有买 无需卖
+               $buyOrderHave = Redis::get($haveOrderBuyKey);
+               if (is_null($buyOrderHave)) return 'have not buy, so not stop less';
+               //有买 下止损卖
+               $doAccount = Config('run')['do_trade'];
+               foreach ($doAccount as $plat => $account) {
+                    if (!empty($account['key'])) {
+                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                         if ($plat === 'binance') {
+                              if (!is_null($orderRes)) {
+                                   return $orderRes;
+                              }
+                              $quantityUsed = $quantity;
+                              $orderIdUsed = $orderId;
+                         } else {
+                              Log::debug('key2 place sell stop less  order quantity ' . $quantity . ' price ' . $closePrice);
+                         }
+                    }
+               }
+
+               //记录卖单id
+               Redis::set($haveOrderSellKey, $orderIdUsed);
+               //删掉买单id 可以下买单了
+               Redis::del($haveOrderBuyKey);
+               //删除标记的12h止损价
+               PlatformService::delLowestPriceSince();
+               return 'place sell stop less order quantity ' . $quantityUsed . ' price ' . $closePrice;
+          }
+
           $key = $platform.$ticker.$period.'macd';
           $macds = TargetService::getMACD($ticker, $period);
           $markTime = Redis::get($key);
@@ -384,15 +423,13 @@ class StrategyService
           $preMACD = $macds[2]['macd'];
           $lowLine = -0.004; //eos 15min
           $highLine = 0.007; //eos 15min
-          $haveOrderBuyKey = $platform . $ticker . $period . 'have_buy_order';
-          $haveOrderSellKey = $platform . $ticker . $period . 'have_sell_order';
 
           if($preMACD < $lowLine && $nowMACD > $preMACD) {
                //下买单
                $buyOrderHave = Redis::get($haveOrderBuyKey);
                if (!is_null($buyOrderHave)) return 'have made buy order '.$nowMACD;
-               $doAccount = Config('run')['do_trade'];
 
+               $doAccount = Config('run')['do_trade'];
                foreach ($doAccount as $plat => $account) {
                     if (!empty($account['key'])) {
                          list($orderRes, $buyPrice, $orderId, $quantity) = OrderService::placeBuyOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
@@ -418,10 +455,10 @@ class StrategyService
                $sellOrderHave = Redis::get($haveOrderSellKey);
                if (!is_null($sellOrderHave)) return 'have made sell order '.$nowMACD;
 
-               $doAccount = Config('run')['do_trade2'];
+               $doAccount = Config('run')['do_trade'];
                foreach ($doAccount as $plat => $account) {
                     if (!empty($account['key'])) {
-                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByGivenPrice(trim($plat), $account['symbol'], $getSellPrice, $account['key'], $account['secret']);
+                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
                          if ($plat === 'binance') {
                               if (!is_null($orderRes)) {
                                    return $orderRes;
@@ -429,7 +466,7 @@ class StrategyService
                               $quantityUsed = $quantity;
                               $orderIdUsed = $orderId;
                          } else {
-                              Log::debug('key2 place sell order quantity '. $quantity . ' price ' . $getSellPrice);
+                              Log::debug('key2 place sell order quantity '. $quantity . ' price ' . $closePrice);
                          }
                     }
                }
@@ -437,9 +474,9 @@ class StrategyService
                Redis::set($haveOrderSellKey, $orderIdUsed);
                //删掉买单id 可以下买单了
                Redis::del($haveOrderBuyKey);
-               return 'place sell order quantity '. $quantityUsed . ' price ' . $getSellPrice;
+               return 'place sell order quantity '. $quantityUsed . ' price ' . $closePrice;
           } else {
-               return $nowMACD;
+               return 'macd_'.$nowMACD;
           }
      }
 }

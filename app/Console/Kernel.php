@@ -37,14 +37,14 @@ class Kernel extends ConsoleKernel
               return null;
          }
 
-         $schedule->call(function () {
-              for ($i = 0; $i < 2; $i++) {
-//                   $result = StrategyService::BlackThree();
-                   $result = StrategyService::BlackThree2();
-                   Log::debug($result);
-                   sleep(3);
-              }
-         })->cron('* * * * *');
+//         $schedule->call(function () {
+//              for ($i = 0; $i < 2; $i++) {
+////                   $result = StrategyService::BlackThree();
+//                   $result = StrategyService::BlackThree2();
+//                   Log::debug($result);
+//                   sleep(3);
+//              }
+//         })->cron('* * * * *');
 
 //         $schedule->call(function () {
 //               for ($i = 0; $i < 10; $i++) {
@@ -54,6 +54,10 @@ class Kernel extends ConsoleKernel
 //                    }
 //                    sleep(5);
 //               }
+//         })->cron('* * * * *');
+//
+//         $schedule->call(function () {
+//             PlatformService::setLowestPriceSince('EOSUSDT', '12h');
 //         })->cron('* * * * *');
     }
 
