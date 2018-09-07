@@ -68,13 +68,13 @@
                         <td>time</td>
                     </tr>
                     @foreach($item['history'] as $e)
-                    <tr bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">
-                        <td>{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
-                        <td>{{$e['price']}}</td>
-                        <td>{{$e['qty']}}</td>
-                        <td>{{$e['commission']}}</td>
-                        <td>{{$e['commissionAsset']}}</td>
-                        <td>{{date('m-d H:i:s', ceil($e['time']/1000))}}</td>
+                    <tr>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['price']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['qty']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['commission']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['commissionAsset']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{date('m-d H:i:s', ceil($e['time']/1000))}}</td>
                     </tr>
                     @endforeach
                 </table>
