@@ -55,7 +55,7 @@
         @endforeach
     </div>
 
-    <div class="row">
+    <div class="row" style="color: #FFFFFF">
         @foreach($data['list'] as $item)
             <div class="col-md-6" style="text-align: center;margin-top: 2%">
                 <table class="table table-striped">
@@ -69,7 +69,7 @@
                     </tr>
                     @foreach($item['history'] as $e)
                     <tr>
-                        <td>{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
                         <td>{{$e['price']}}</td>
                         <td>{{$e['qty']}}</td>
                         <td>{{$e['commission']}}</td>
