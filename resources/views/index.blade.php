@@ -21,7 +21,7 @@
                     <td>操作</td>
                 </tr>
                 <tr>
-                    <td>MAC改进策略</td>
+                    <td>MACD改进策略</td>
                     <td>
                         @if(is_null($item['status']) || $item['status'] == 0)
                             已关闭
