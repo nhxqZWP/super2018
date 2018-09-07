@@ -59,7 +59,7 @@
         @foreach($data['list'] as $item)
             <div class="col-md-6" style="text-align: center;margin-top: 2%">
                 <table class="table table-striped">
-                    <tr>
+                    <tr style="color: #000000">
                         <td>type</td>
                         <td>price</td>
                         <td>quantity</td>
@@ -69,12 +69,12 @@
                     </tr>
                     @foreach($item['history'] as $e)
                     <tr>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['price']}}</td>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['qty']}}</td>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['commission']}}</td>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['commissionAsset']}}</td>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{date('m-d H:i:s', ceil($e['time']/1000))}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{$e['price']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{$e['qty']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{$e['commission']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{$e['commissionAsset']}}</td>
+                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#00ced1'}}">{{date('m-d H:i:s', ceil($e['time']/1000))}}</td>
                     </tr>
                     @endforeach
                 </table>
