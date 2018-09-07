@@ -68,8 +68,8 @@
                         <td>time</td>
                     </tr>
                     @foreach($item['history'] as $e)
-                    <tr>
-                        <td bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
+                    <tr bgcolor="{{$e['isBuyer'] == true ? '#ff1493' : '#7fffd4'}}">
+                        <td>{{$e['isBuyer'] == true ? 'buy' : 'sell'}}</td>
                         <td>{{$e['price']}}</td>
                         <td>{{$e['qty']}}</td>
                         <td>{{$e['commission']}}</td>
