@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
 
          $schedule->call(function () {
              PlatformService::setLowestPriceSince('EOSUSDT', '12h');
-         })->cron('* * * * *');
+         })->everyFiveMinutes();
     }
 
     /**
