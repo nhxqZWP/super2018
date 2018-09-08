@@ -416,7 +416,7 @@ class StrategyService
           $markTime = Redis::get($key);
           $timeStamp = $macds[1]['timestamp'];
           //macd没变化
-          if (!is_null($markTime) && $markTime == $timeStamp) return 'macd not change';
+          if (!is_null($markTime) && $markTime == $timeStamp) return null;
           Redis::set($key, $timeStamp);
 
           //macd有变化
@@ -428,7 +428,7 @@ class StrategyService
           if($preMACD < $lowLine && $nowMACD > $preMACD) {
                //下买单
                $buyOrderHave = Redis::get($haveOrderBuyKey);
-               if (!is_null($buyOrderHave)) return 'have made buy order '.$nowMACD;
+               if (!is_null($buyOrderHave)) return 'have made buy order now macd '.$nowMACD;
 
                $doAccount = Config('run')['do_trade'];
                foreach ($doAccount as $plat => $account) {
@@ -450,7 +450,7 @@ class StrategyService
                Redis::set($haveOrderBuyKey, $orderIdUsed);
                //删除卖单id 可以下卖单了
                Redis::del($haveOrderSellKey);
-               return 'place buy order quantity '. $quantityUsed . ' price ' . $buyPriceUsed;
+               return 'place buy order quantity '. $quantityUsed . ' price ' . $buyPriceUsed. ' macd '.$nowMACD;
           } elseif($preMACD > $highLine && $nowMACD < $preMACD) {
                //下卖单
                $sellOrderHave = Redis::get($haveOrderSellKey);
@@ -475,7 +475,7 @@ class StrategyService
                Redis::set($haveOrderSellKey, $orderIdUsed);
                //删掉买单id 可以下买单了
                Redis::del($haveOrderBuyKey);
-               return 'place sell order quantity '. $quantityUsed . ' price ' . $closePrice;
+               return 'place sell order quantity '. $quantityUsed . ' price ' . $closePrice. ' macd '.$nowMACD;
           } else {
                return 'macd_'.$nowMACD;
           }
