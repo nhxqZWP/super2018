@@ -423,7 +423,7 @@ class StrategyService
           $nowMACD = $macds[1]['macd'];
           $preMACD = $macds[2]['macd'];
           $lowLine = -0.0035; //eos 15min
-          $highLine = 0.0045; //eos 15min
+          $highLine = 0.005; //eos 15min
 
           if($preMACD < $lowLine && $nowMACD > $preMACD) {
                //下买单
