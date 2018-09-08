@@ -416,7 +416,7 @@ class StrategyService
           $markTime = Redis::get($key);
           $timeStamp = $macds[1]['timestamp'];
           //macd没变化
-          if (!is_null($markTime) && $markTime == $timeStamp) return null;
+          if (!is_null($markTime) && $markTime == $timeStamp) return 'macd not change';
           Redis::set($key, $timeStamp);
 
           //macd有变化
