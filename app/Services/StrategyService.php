@@ -245,7 +245,7 @@ class StrategyService
                          if ($mark < 0) {
                               Redis::set($changKey, self::UP);
                               //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
-                              $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker, '1d');
+                              $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker, '3d');
                               if ($change) {
                                    $quantity = 0;
                                    $doAccount = Config('run')['do_trade2'];
@@ -267,7 +267,7 @@ class StrategyService
                                    Redis::set($haveOrderKey, $orderIdUsed);
                                    //删除标记的卖单价格
                                    Redis::del($sellPriceLineKey);
-                                   //删除标记的1d止损价
+                                   //删除标记的3d止损价
                                    PlatformService::delLowestPriceSince();
                                    return 'place sell stop less order quantity '. $quantityUsed . ' price ' . $closePrice;
                               }
@@ -406,7 +406,7 @@ class StrategyService
                Redis::set($haveOrderSellKey, $orderIdUsed);
                //删掉买单id 可以下买单了
                Redis::del($haveOrderBuyKey);
-               //删除标记的1d止损价
+               //删除标记的3d止损价
                PlatformService::delLowestPriceSince();
                return 'place sell stop less order quantity ' . $quantityUsed . ' price ' . $closePrice;
           }
