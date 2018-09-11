@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Platforms\Binance;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -47,6 +48,17 @@ class OrderService
           if ($platform == PlatformService::BINANCE) {
                $api = new Binance($key, $secret);
                $balance = $api->balances();
+
+               //BNB不足
+               if ($balance['BNB']['available'] < 0.2) { //BNB小于0.2个
+                   $priceBNB = $api->prices()['BNBUSDT'];
+                   $resBNB = $api->buy('BNBUSDT', 3, $priceBNB); //买3个BNB
+                   if (isset($resBNB['msg'])) {
+                       return Log::debug($resBNB['msg']);
+                   }
+                   Log::debug('buy 3 BNB at price '. $priceBNB);
+               }
+
                $coin2 = $balance[$coins[1]]['available']; //usdt
                $price = $api->prices()[$ticker]; //币安获取的价格可以直接使用
                $quantity = self::coinShow($ticker,$coin2 / $price);
