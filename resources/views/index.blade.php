@@ -20,7 +20,7 @@
                 <span style="color:#67b168">运行中</span>
             @endif
             &nbsp;
-            @if(is_null($item['status']) || $item['status'] == 0)
+            @if(is_null($data['status']) || $data['status'] == 0)
                 <a href="/switch?key=three_down_btcusdt_minute&action=1" class="btn btn-success btn-sm" role="button">&nbsp;打开&nbsp;</a>
             @else
                 <a href="/switch?key=three_down_btcusdt_minute&action=0" class="btn btn-danger btn-sm" role="button">&nbsp;关闭&nbsp;</a>
