@@ -57,6 +57,7 @@ class OrderService
                        return Log::debug($resBNB['msg']);
                    }
                    Log::debug('buy 3 BNB at price '. $priceBNB);
+                   $balance = $api->balances(); //重新获取balance
                }
 
                $coin2 = $balance[$coins[1]]['available']; //usdt
