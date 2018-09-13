@@ -27,6 +27,7 @@ class IndexController extends Controller
           $key = StrategyService::THREE_DOWN_BTCUSDT;
           $status = Redis::get($key);
 
+          $data['status'] = $status;
           $data['list'] = [];
           $doAccount = Config('run')['do_trade'];
           foreach ($doAccount as $plat => $account) {
@@ -37,26 +38,30 @@ class IndexController extends Controller
                          $coin1 = $balance['BTC'];
                          $coin1Str = '';
                          foreach ($coin1 as $k => $c) {
+                              if($k == 'btcValue') break;
                               $coin1Str .= $k .':'.$c."<br>";
                          }
                          $coin2 = $balance['USDT'];
                          $coin2Str = '';
                          foreach ($coin2 as $k => $c) {
+                              if($k == 'btcValue') break;
                               $coin2Str .= $k .':'.$c."<br>";
                          }
                          $coin3 = $balance['BNB'];
                          $coin3Str = '';
                          foreach ($coin3 as $k => $c) {
+                              if($k == 'btcValue') break;
                               $coin3Str .= $k .':'.$c."<br>";
                          }
                          $coin4 = $balance['EOS'];
                          $coin4Str = '';
                          foreach ($coin4 as $k => $c) {
+                              if($k == 'btcValue') break;
                               $coin4Str .= $k .':'.$c."<br>";
                          }
 
                     $api = new Binance($account['key'], $account['secret']);
-                    $history = $api->history('EOSUSDT', 100);
+                    $history = $api->history('EOSUSDT', 50);
 
                     $data['list'][] = ['status' => $status, 'history' => array_reverse($history),'coin1' => $coin1Str, 'coin2' => $coin2Str, 'coin3' => $coin3Str, 'coin4' => $coin4Str];
                }

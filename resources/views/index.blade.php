@@ -12,32 +12,48 @@
 <body>
 <div class="container-fluid">
     <div class="row">
+        <div class="col-md-12" style="text-align: center;margin-top: 1%">
+            MACD改进策略 状态：
+            @if(is_null($data['status']) || $data['status'] == 0)
+                <span style="color:#c7254e">已关闭</span>
+            @else
+                <span style="color:#67b168">运行中</span>
+            @endif
+            &nbsp;
+            @if(is_null($data['status']) || $data['status'] == 0)
+                <a href="/switch?key=three_down_btcusdt_minute&action=1" class="btn btn-success btn-sm" role="button">&nbsp;打开&nbsp;</a>
+            @else
+                <a href="/switch?key=three_down_btcusdt_minute&action=0" class="btn btn-danger btn-sm" role="button">&nbsp;关闭&nbsp;</a>
+            @endif
+        </div>
+    </div>
+    <div class="row">
         @foreach($data['list'] as $item)
-        <div class="col-md-6" style="text-align: center;margin-top: 2%">
-            <table class="table table-striped">
-                <tr>
-                    <td>策略</td>
-                    <td>状态</td>
-                    <td>操作</td>
-                </tr>
-                <tr>
-                    <td>MACD改进策略</td>
-                    <td>
-                        @if(is_null($item['status']) || $item['status'] == 0)
-                            已关闭
-                            @else
-                            运行中
-                        @endif
-                    </td>
-                    <td>
-                        @if(is_null($item['status']) || $item['status'] == 0)
-                            <a href="/switch?key=three_down_btcusdt_minute&action=1" class="btn btn-success btn-sm" role="button">&nbsp;打开&nbsp;</a>
-                        @else
-                            <a href="/switch?key=three_down_btcusdt_minute&action=0" class="btn btn-danger btn-sm" role="button">&nbsp;关闭&nbsp;</a>
-                        @endif
-                    </td>
-                </tr>
-            </table>
+        <div class="col-md-6" style="text-align: center;margin-top: 1%">
+            {{--<table class="table table-striped">--}}
+                {{--<tr>--}}
+                    {{--<td>策略</td>--}}
+                    {{--<td>状态</td>--}}
+                    {{--<td>操作</td>--}}
+                {{--</tr>--}}
+                {{--<tr>--}}
+                    {{--<td>MACD改进策略</td>--}}
+                    {{--<td>--}}
+                        {{--@if(is_null($item['status']) || $item['status'] == 0)--}}
+                            {{--已关闭--}}
+                            {{--@else--}}
+                            {{--运行中--}}
+                        {{--@endif--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--@if(is_null($item['status']) || $item['status'] == 0)--}}
+                            {{--<a href="/switch?key=three_down_btcusdt_minute&action=1" class="btn btn-success btn-sm" role="button">&nbsp;打开&nbsp;</a>--}}
+                        {{--@else--}}
+                            {{--<a href="/switch?key=three_down_btcusdt_minute&action=0" class="btn btn-danger btn-sm" role="button">&nbsp;关闭&nbsp;</a>--}}
+                        {{--@endif--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+            {{--</table>--}}
             {{--<br>--}}
             <table class="table table-striped">
                 <tr>
@@ -57,7 +73,7 @@
 
     <div class="row" style="color: #FFFFFF">
         @foreach($data['list'] as $item)
-            <div class="col-md-6" style="text-align: center;margin-top: 2%">
+            <div class="col-md-6" style="text-align: center;margin-top: 1%">
                 <table class="table table-striped">
                     <tr style="color: #000000">
                         <td>type</td>
