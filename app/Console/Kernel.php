@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
 
          $schedule->call(function () {
                for ($i = 0; $i < 10; $i++) {
-                    $log = StrategyService::changeMACD();
+                    $log = StrategyService::changeMacdOffset();
                     if (!is_null($log)) {
                          Log::debug($log);
                     }
@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
 
          $schedule->call(function () {
              PlatformService::setLowestPriceSince('EOSUSDT', '3d');
-         })->everyFiveMinutes();
+         })->everyTenMinutes();
     }
 
     /**

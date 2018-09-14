@@ -14,7 +14,7 @@ class StrategyService
      const DOWN_THREEE = -3; //跌三次
      const DOWN_MORE = -4; //跌四次及以上
      const BINANCE_FEE = 0.002;
-     const PROFIT_FEE_PERCENT = 0.001;
+     const PROFIT_FEE_PERCENT = 0.0015;
      const STOP_LOSS_PRICE_DEL = 400; //差400usdt止损
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
 
@@ -478,6 +478,116 @@ class StrategyService
                return 'place sell order quantity '. $quantityUsed . ' price ' . $closePrice. ' macd '.$nowMACD;
           } else {
                return 'macd_'.$nowMACD;
+          }
+     }
+
+     //macd底与负多少后上涨买入，高于偏移价卖出
+     public static function changeMacdOffset($platform = PlatformService::BINANCE, $symbol = 'EOS/USDT', $period = '15m')
+     {
+          date_default_timezone_set('PRC');
+          $ticker = implode('', explode('/', $symbol));
+          $haveOrderBuyKey = $platform . $ticker . $period . 'have_buy_order';
+
+          //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
+          $api = new Binance(Config('run')['get_platform_key'], Config('run')['get_platform_secret']);
+          $ticks = $api->candlesticks($ticker, '1m');
+          $endSecond = array_slice($ticks,-2,1)[0];
+          $closePrice = $endSecond['close'];
+          $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker);
+          if ($change) { //如果到了止损价
+               //没有买 无需卖
+               $buyOrderHave = Redis::get($haveOrderBuyKey);
+               if (is_null($buyOrderHave)) return 'have not buy, so not stop less';
+               //有买 下止损卖
+               $doAccount = Config('run')['do_trade'];
+               foreach ($doAccount as $plat => $account) {
+                    if (!empty($account['key'])) {
+                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                         if ($plat === 'binance') {
+                              if (!is_null($orderRes)) {
+                                   return $orderRes;
+                              }
+                              $quantityUsed = $quantity;
+                              $orderIdUsed = $orderId;
+                         } else {
+                              Log::debug('key2 place sell stop less  order quantity ' . $quantity . ' price ' . $closePrice);
+                         }
+                    }
+               }
+
+               //删掉买单id 可以下买单了
+               Redis::del($haveOrderBuyKey);
+               //删除标记的3d止损价
+               PlatformService::delLowestPriceSince();
+               return 'place sell stop less order quantity ' . $quantityUsed . ' price ' . $closePrice;
+          }
+
+          $key = $platform.$ticker.$period.'macd';
+          $macds = TargetService::getMACD($ticker, $period);
+          $markTime = Redis::get($key);
+          $timeStamp = $macds[1]['timestamp'];
+          //macd没变化
+          if (!is_null($markTime) && $markTime == $timeStamp) return 'macd not change';
+          Redis::set($key, $timeStamp);
+
+          //macd有变化
+          $nowMACD = $macds[1]['macd'];
+          $preMACD = $macds[2]['macd'];
+          $lowLine = env('BUY_MACD_15_LOW', -0.0035); //eos 15min
+          $sellPriceLineKey = $platform . $ticker . $period . 'sellline';
+
+          $buyOrderHave = Redis::get($haveOrderBuyKey);
+          if (is_null($buyOrderHave)) {   //判断是否可以下买单
+               if($preMACD < $lowLine && $nowMACD > $preMACD) { //下买单条件
+                    $doAccount = Config('run')['do_trade'];
+                    foreach ($doAccount as $plat => $account) {
+                         if (!empty($account['key'])) {
+                              list($orderRes, $buyPrice, $orderId, $quantity) = OrderService::placeBuyOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                              if ($plat === 'binance') {
+                                   if (!is_null($orderRes)) {
+                                        return $orderRes;
+                                   }
+                                   $buyPriceUsed = $buyPrice;
+                                   $quantityUsed = $quantity;
+                                   $orderIdUsed = $orderId;
+                              } else {
+                                   Log::debug('key2 place buy order quantity '. $quantity . ' price ' . $buyPrice);
+                              }
+                         }
+                    }
+                    //记录买单id
+                    Redis::set($haveOrderBuyKey, $orderIdUsed);
+                    //标记卖单价
+                    $sellPriceLinePrice = $buyPriceUsed * (1 + self::BINANCE_FEE + self::PROFIT_FEE_PERCENT);
+                    Redis::set($sellPriceLineKey, $sellPriceLinePrice);
+                    return 'place buy order quantity '. $quantityUsed . ' price ' . $buyPriceUsed. ' macd '.$nowMACD;
+               }
+          } else {
+               //可以下卖单了 进入了即为每15分钟
+               $getSellPrice = Redis::get($sellPriceLineKey);
+               $currentPrice = OrderService::getOnePrice(PlatformService::BINANCE, $ticker);
+               if ($currentPrice < $getSellPrice) return 'current price less than sell price line '.$getSellPrice;
+
+               $doAccount = Config('run')['do_trade'];
+               foreach ($doAccount as $plat => $account) {
+                    if (!empty($account['key'])) {
+                         list($orderRes, $quantity, $orderId) = OrderService::placeSellOrderByCurrentPrice(trim($plat), $account['symbol'], $account['key'], $account['secret']);
+                         if ($plat === 'binance') {
+                              if (!is_null($orderRes)) {
+                                   return $orderRes;
+                              }
+                              $quantityUsed = $quantity;
+                              $orderIdUsed = $orderId;
+                         } else {
+                              Log::debug('key2 place sell order quantity '. $quantity . ' price ' . $closePrice);
+                         }
+                    }
+               }
+//               //记录卖单id
+//               Redis::set($haveOrderSellKey, $orderIdUsed);
+               //删掉买单id 可以下买单了
+               Redis::del($haveOrderBuyKey);
+               return 'place sell order quantity '. $quantityUsed . ' price ' . $closePrice. ' macd '.$nowMACD;
           }
      }
 }
