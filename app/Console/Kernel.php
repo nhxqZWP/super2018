@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//         ini_set('memory_limit', '1000M'); //内存限制
+//         ini_set('memory_limit', '1000M'); // 内存限制
          $key = StrategyService::THREE_DOWN_BTCUSDT;
          $status = Redis::get($key);
          if (is_null($status) || $status == 0) {
