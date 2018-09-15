@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Platforms\Binance;
+use App\Repositoties\UsdtRecordRepository;
 use Illuminate\Support\Facades\Log;
 
 class OrderService
@@ -112,6 +113,9 @@ class OrderService
                     return [$res['msg'].' sell '.$ticker.' q: '.$quantity.' p: '.$price, 0, ''];
                }
                $orderId = $res['orderId'];
+
+               //记录usdt剩余
+              UsdtRecordRepository::createUsdtLeftRecord($key, $ticker, $price, intval($coin1*$price), time());
           }
           return [null, $quantity, $orderId];
      }
