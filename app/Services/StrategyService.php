@@ -17,6 +17,7 @@ class StrategyService
      const PROFIT_FEE_PERCENT = 0.0015;
      const STOP_LOSS_PRICE_DEL = 400; //差400usdt止损
      const THREE_DOWN_BTCUSDT = 'three_down_btcusdt_minute';
+     const STOP_TRADE_KEY = 'stop_trade';
 
      //黑三兵后买 固定偏移卖 minute
      public static function BlackThree($platform = PlatformService::BINANCE, $symbol = 'BTC/USDT', $period = '3m', $profitPercent = self::PROFIT_FEE_PERCENT)
@@ -488,6 +489,10 @@ class StrategyService
           $ticker = implode('', explode('/', $symbol));
           $haveOrderBuyKey = $platform . $ticker . $period . 'have_buy_order';
 
+          //判断是否止损后停止
+          $stop = Redis::get(self::STOP_TRADE_KEY);
+          if (!is_null($stop)) return '止损后停止28小时';
+
           //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
           $api = new Binance(Config('run')['get_platform_key'], Config('run')['get_platform_secret']);
           $ticks = $api->candlesticks($ticker, '1m');
@@ -495,6 +500,9 @@ class StrategyService
           $closePrice = $endSecond['close'];
           $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker);
           if ($change) { //如果到了止损价
+               //则28小时稳定以后再交易
+               $time = 60 * 60 * 28;
+               Redis::SETEX(self::STOP_TRADE_KEY, $time, 'stop_trade');
                //没有买 无需卖
                $buyOrderHave = Redis::get($haveOrderBuyKey);
                if (is_null($buyOrderHave)) return 'have not buy, so not stop less';
