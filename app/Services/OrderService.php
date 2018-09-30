@@ -115,7 +115,7 @@ class OrderService
                $orderId = $res['orderId'];
 
                //记录usdt剩余
-              UsdtRecordRepository::createUsdtLeftRecord($key, $ticker, $price, intval($coin1*$price), time());
+//              UsdtRecordRepository::createUsdtLeftRecord($key, $ticker, $price, intval($coin1*$price), time());
           }
           return [null, $quantity, $orderId];
      }
