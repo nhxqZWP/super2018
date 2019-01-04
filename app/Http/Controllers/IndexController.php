@@ -12,8 +12,12 @@ use Illuminate\Support\Facades\Redis;
 
 class IndexController extends Controller
 {
+    public function getIndex()
+    {
+        return view('welcome');
+    }
 
-     public function getIndex()
+     public function getIndex2()
      {
 //          $doAccount = Config('run')['do_trade'];
 //          foreach ($doAccount as $plat => $account) {
