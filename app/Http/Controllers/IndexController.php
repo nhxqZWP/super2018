@@ -15,6 +15,7 @@ class IndexController extends Controller
 {
     public function getIndex()
     {
+        return view('emails.priceList');
         $bitMex = Bitmex::instance();
 //        $ticker = $bitMex->getTicker('XBTH19');
         $arr = ['XBTUSD','XBTH19','XBTM19'];

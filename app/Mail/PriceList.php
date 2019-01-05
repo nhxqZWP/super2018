@@ -29,6 +29,7 @@ class PriceList extends Mailable
             $priceList[$symbol] = $bitMex->getTicker($symbol)['last'];
         }
         $this->priceList = $priceList;
+        $this->rateList = $bitMex->getFunding('XBTUSD');
     }
 
     /**
@@ -38,6 +39,6 @@ class PriceList extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('view.emails.priceList');
     }
 }
