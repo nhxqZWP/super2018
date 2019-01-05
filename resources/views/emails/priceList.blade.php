@@ -37,6 +37,41 @@
         <td>
             <table cellpadding="0" cellspacing="0" border="1" align="center">
                 <tr>
+                    <td>合约</td>
+                    <td>价格差</td>
+                </tr>
+                <tr>
+                    <td width="200" valign="top">
+                        XBTUSD-XBTH19
+                    </td>
+                    <td width="200" valign="top">
+                        {{$priceList['XBTUSD']-$priceList['XBTH19']}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="200" valign="top">
+                        XBTH19-XBTM19
+                    </td>
+                    <td width="200" valign="top">
+                        {{$priceList['XBTH19']-$priceList['XBTM19']}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="200" valign="top">
+                        XBTUSD-XBTM19
+                    </td>
+                    <td width="200" valign="top">
+                        {{$priceList['XBTUSD']-$priceList['XBTM19']}}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table cellpadding="0" cellspacing="0" border="1" align="center">
+                <tr>
                     <td>时间</td>
                     <td>Rate</td>
                     <td>RateDaily</td>

@@ -16,8 +16,8 @@
 //});
 
 Route::get('/test', 'TestController@test');
-Route::get('/', 'IndexController@getIndex');
-//Route::get('/', function () {
-//    return new \App\Mail\PriceList();
-//});
+//Route::get('/', 'IndexController@getIndex');
+Route::get('/', function () {
+    return new \App\Mail\PriceList();
+});
 Route::get('/switch', 'IndexController@getSwitch');
