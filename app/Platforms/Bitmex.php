@@ -79,7 +79,7 @@ class Bitmex
             "count" => 10
         );
         $return = $this->publicQuery($data);
-        if(!$return || count($return) != 1 || !isset($return[0]['symbol'])) return false;
+//        if(!$return || count($return) != 1 || !isset($return[0]['symbol'])) return false;
 //        $return = array(
 //            "symbol" => $return[0]['symbol'],
 //            "last" => $return[0]['lastPrice'],
