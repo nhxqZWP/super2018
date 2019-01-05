@@ -40,8 +40,10 @@ class Bitmex
      *
      * @return ticker array
      */
-    public function getTicker() {
-        $symbol = self::SYMBOL;
+    public function getTicker($symbol = null) {
+        if (is_null($symbol)) {
+            $symbol = self::SYMBOL;
+        }
         $data['function'] = "instrument";
         $data['params'] = array(
             "symbol" => $symbol
