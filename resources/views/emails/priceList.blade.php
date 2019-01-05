@@ -44,13 +44,13 @@
                 @foreach($rateList as $rate)
                     <tr>
                         <td width="200" valign="top">
-                            {{$rate->timestamp}}
+                            {{$rate['timestamp']}}
                         </td>
                         <td width="200" valign="top">
-                            {{$rate->fundingRate}}
+                            {{$rate['fundingRate']}}
                         </td>
                         <td width="200" valign="top">
-                            {{$rate->fundingRateDaily}}
+                            {{$rate['fundingRateDaily']}}
                         </td>
                     </tr>
                 @endforeach
