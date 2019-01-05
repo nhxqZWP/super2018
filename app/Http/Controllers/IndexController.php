@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PriceList;
 use App\Platforms\Binance;
 use App\Platforms\Bitmex;
 use App\Services\OrderService;
@@ -9,12 +10,15 @@ use App\Services\PlatformService;
 use App\Services\StrategyService;
 use App\Services\TargetService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
 
 class IndexController extends Controller
 {
     public function getIndex()
     {
+        Mail::to('aimococo@163.com')->send(new PriceList());
+dd(1);
         return view('emails.priceList');
         $bitMex = Bitmex::instance();
 //        $ticker = $bitMex->getTicker('XBTH19');
