@@ -60,6 +60,35 @@ class Bitmex
         );
         return $return;
     }
+
+    /**
+     * Get Funding
+     *
+     * @param null $symbol
+     * @return bool|mixed
+     */
+    public function getFunding($symbol = null)
+    {
+        if (is_null($symbol)) {
+            $symbol = self::SYMBOL;
+        }
+        $data['function'] = "funding";
+        $data['params'] = array(
+            "symbol" => $symbol
+        );
+        $return = $this->publicQuery($data);
+        if(!$return || count($return) != 1 || !isset($return[0]['symbol'])) return false;
+//        $return = array(
+//            "symbol" => $return[0]['symbol'],
+//            "last" => $return[0]['lastPrice'],
+//            "bid" => $return[0]['bidPrice'],
+//            "ask" => $return[0]['askPrice'],
+//            "high" => $return[0]['highPrice'],
+//            "low" => $return[0]['lowPrice']
+//        );
+        return $return;
+    }
+
     /*
      * Get Candles
      *
