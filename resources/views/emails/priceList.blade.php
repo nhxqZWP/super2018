@@ -47,10 +47,10 @@
                             {{$rate['timestamp']}}
                         </td>
                         <td width="200" valign="top">
-                            {{$rate['fundingRate']}}
+                            {{$rate['fundingRate'] * 100}}%
                         </td>
                         <td width="200" valign="top">
-                            {{$rate['fundingRateDaily']}}
+                            {{$rate['fundingRateDaily'] * 100}}%
                         </td>
                     </tr>
                 @endforeach
