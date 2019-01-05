@@ -12,8 +12,8 @@ class PriceList extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $priceList;
-    protected $rateList;
+    public $priceList;
+    public $rateList;
 
     /**
      * Create a new message instance.
