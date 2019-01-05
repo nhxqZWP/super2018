@@ -30,8 +30,31 @@
                 </tr>
                 @endforeach
             </table>
+        </td>
+    </tr>
 
-            {{--<a href="http://htmlemailboilerplate.com" target ="_blank" title="Styling Links" style="color: orange; text-decoration: none;">Coloring Links appropriately</a>--}}
+    <tr>
+        <td>
+            <table cellpadding="0" cellspacing="0" border="1" align="center">
+                <tr>
+                    <td>时间</td>
+                    <td>Rate</td>
+                    <td>RateDaily</td>
+                </tr>
+                @foreach($rateList as $rate)
+                    <tr>
+                        <td width="200" valign="top">
+                            {{$rate->timestamp}}
+                        </td>
+                        <td width="200" valign="top">
+                            {{$rate->fundingRate}}
+                        </td>
+                        <td width="200" valign="top">
+                            {{$rate->fundingRateDaily}}
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
         </td>
     </tr>
 </table>
