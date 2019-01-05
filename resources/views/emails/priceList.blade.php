@@ -15,10 +15,10 @@
     <tr>
         <td>
             <table cellpadding="0" cellspacing="0" border="1" align="center">
-                <th>
+                <tr>
                     <td>合约</td>
                     <td>价格</td>
-                </th>
+                </tr>
                 @foreach($priceList as $coin => $price)
                 <tr>
                     <td width="200" valign="top">
