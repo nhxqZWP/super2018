@@ -16,8 +16,13 @@ class IndexController extends Controller
     public function getIndex()
     {
         $bitMex = Bitmex::instance();
-        $ticker = $bitMex->getTicker('XBTH19');
-        dd($ticker);
+//        $ticker = $bitMex->getTicker('XBTH19');
+        $arr = ['XBTUSD','XBTH19','XBTM19'];
+        $res = [];
+        foreach ($arr as $symbol) {
+            $res[$symbol] = $bitMex->getTicker($symbol);
+        }
+        dd($res);
         return view('welcome');
     }
 
