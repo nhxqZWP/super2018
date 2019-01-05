@@ -74,7 +74,9 @@ class Bitmex
         }
         $data['function'] = "funding";
         $data['params'] = array(
-            "symbol" => $symbol
+            "symbol" => $symbol,
+            "reverse" => true,
+            "count" => 10
         );
         $return = $this->publicQuery($data);
         if(!$return || count($return) != 1 || !isset($return[0]['symbol'])) return false;
