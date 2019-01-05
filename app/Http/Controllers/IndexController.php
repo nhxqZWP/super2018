@@ -18,6 +18,7 @@ class IndexController extends Controller
 {
     public function getIndex()
     {
+        PriceListService::showList();
 //        PriceListService::getList();
         dd(1);
 

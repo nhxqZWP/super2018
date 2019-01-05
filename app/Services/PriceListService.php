@@ -39,4 +39,13 @@ class PriceListService
         $record->save();
 
     }
+
+    public static function showList()
+    {
+        $all = PriceRecord::all();
+        if (!is_null($all)) {
+            dd($all->toArray());
+        }
+        dd('空');
+    }
 }
