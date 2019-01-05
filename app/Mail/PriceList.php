@@ -39,6 +39,6 @@ class PriceList extends Mailable
      */
     public function build()
     {
-        return $this->view('view.emails.priceList');
+        return $this->view('emails.priceList');
     }
 }
