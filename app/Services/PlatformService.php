@@ -11,6 +11,7 @@ class PlatformService
      const HUOBI = 'huobi';
      const BITMEX = 'bitmex';
      const OKEX = 'okex';
+     const PERIOD = '3d';
 
      static function BinanceGetKey()
      {
@@ -22,18 +23,18 @@ class PlatformService
           return Config('run')['get_platform_secret'];
      }
 
-     static function getLowestPriceSinceKey($ticker = 'EOSUSDT', $period = '3d', $platform = self::BINANCE)
+     static function getLowestPriceSinceKey($ticker = 'EOSUSDT', $period = self::PERIOD, $platform = self::BINANCE)
      {
           return $platform . $ticker . $period . 'lowest';
      }
 
-     static function delLowestPriceSince($ticker = 'EOSUSDT', $period = '3d', $platform = self::BINANCE)
+     static function delLowestPriceSince($ticker = 'EOSUSDT', $period = self::PERIOD, $platform = self::BINANCE)
      {
           $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
           Redis::del($key);
      }
 
-     static function setLowestPriceSince($ticker = 'EOSUSDT', $period = '3d', $platform = self::BINANCE)
+     static function setLowestPriceSince($ticker = 'EOSUSDT', $period = self::PERIOD, $platform = self::BINANCE)
      {
           if ($platform == self::BINANCE) {
                $api = new Binance(PlatformService::BinanceGetKey(), PlatformService::BinanceGetSecret());
@@ -55,7 +56,7 @@ class PlatformService
           }
      }
 
-     static function getIsLowerThanLowestPrice($price, $ticker = 'EOSUSDT', $period = '3d', $platform = self::BINANCE)
+     static function getIsLowerThanLowestPrice($price, $ticker = 'EOSUSDT', $period = self::PERIOD, $platform = self::BINANCE)
      {
           $key = self::getLowestPriceSinceKey($ticker, $period, $platform);
           $markPrice = Redis::get($key);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Platforms\Binance;
+use App\Platforms\Bitmex;
 use App\Services\OrderService;
 use App\Services\PlatformService;
 use App\Services\StrategyService;
@@ -14,6 +15,9 @@ class IndexController extends Controller
 {
     public function getIndex()
     {
+        $bitMex = Bitmex::instance();
+        $ticker = $bitMex->getTicker();
+        dd($ticker);
         return view('welcome');
     }
 

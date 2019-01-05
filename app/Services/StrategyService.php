@@ -491,17 +491,17 @@ class StrategyService
 
           //判断是否止损后停止
           $stop = Redis::get(self::STOP_TRADE_KEY);
-          if (!is_null($stop)) return '止损后停止28小时';
+          if (!is_null($stop)) return '止损后停止24小时';
 
-          //判断是否到了止损价（12小时内最低点）到了则卖出 并标记此个12小时已使用
+          //判断是否到了止损价（3天内最低点）到了则卖出 并标记此个3天标记已使用
           $api = new Binance(Config('run')['get_platform_key'], Config('run')['get_platform_secret']);
           $ticks = $api->candlesticks($ticker, '1m');
           $endSecond = array_slice($ticks,-2,1)[0];
           $closePrice = $endSecond['close'];
           $change = PlatformService::getIsLowerThanLowestPrice($closePrice, $ticker);
           if ($change) { //如果到了止损价
-               //则28小时稳定以后再交易
-               $time = 60 * 60 * 28;
+               //标记24小时稳定以后再交易
+               $time = 60 * 60 * 24;
                Redis::SETEX(self::STOP_TRADE_KEY, $time, 'stop_trade');
                //没有买 无需卖
                $buyOrderHave = Redis::get($haveOrderBuyKey);
