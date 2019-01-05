@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Mail\PriceList;
 use App\Services\OrderService;
 use App\Services\PlatformService;
+use App\Services\PriceListService;
 use App\Services\StrategyService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -31,10 +32,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+//        $schedule->call(function () {
+//            $to = explode(',', env('MAIL_SEND_TO'));
+//            Mail::to($to)->send(new PriceList());
+//        })->cron('1 18 * * *');
+
         $schedule->call(function () {
-            $to = explode(',', env('MAIL_SEND_TO'));
-            Mail::to($to)->send(new PriceList());
-        })->cron('1 18 * * *');
+            PriceListService::getList();
+        })->hourlyAt(1);;
 
 ////         ini_set('memory_limit', '1000M'); // 内存限制
 //         $key = StrategyService::THREE_DOWN_BTCUSDT;

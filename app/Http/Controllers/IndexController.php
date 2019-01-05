@@ -7,6 +7,7 @@ use App\Platforms\Binance;
 use App\Platforms\Bitmex;
 use App\Services\OrderService;
 use App\Services\PlatformService;
+use App\Services\PriceListService;
 use App\Services\StrategyService;
 use App\Services\TargetService;
 use Illuminate\Http\Request;
@@ -17,6 +18,9 @@ class IndexController extends Controller
 {
     public function getIndex()
     {
+//        PriceListService::getList();
+        dd(1);
+
         Mail::to(['631849184@qq.com','aimococo@163.com'])->send(new PriceList());
 dd('ok');
         return view('emails.priceList');
