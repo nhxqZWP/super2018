@@ -18,7 +18,7 @@ class IndexController extends Controller
     public function getIndex()
     {
         Mail::to(['aimococo@163.com','xiaowei719899730@163.com'])->send(new PriceList());
-dd(1);
+dd('ok');
         return view('emails.priceList');
         $bitMex = Bitmex::instance();
 //        $ticker = $bitMex->getTicker('XBTH19');
