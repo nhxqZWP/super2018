@@ -21,11 +21,11 @@ class IndexController extends Controller
     public function getIndex()
     {
         date_default_timezone_set('PRC');
-        $all = PriceRecord::paginate(10);
+        $all = PriceRecord::all();
 
         $time = [];
         foreach ($all->pluck('created_at') as $l) {
-            $time[] = $l->format('Y-m-d H:i');
+            $time[] = $l->format('m-d H:i');
         }
 
         $chart = new SampleChart;
@@ -37,6 +37,12 @@ class IndexController extends Controller
 
         $list = PriceRecord::paginate(10);
         return view('showList', ['list' => $list, 'chart' => $chart]);
+
+
+
+
+
+
 
 
         PriceListService::showList();
