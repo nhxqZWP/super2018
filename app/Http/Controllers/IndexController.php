@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\SampleChart;
 use App\Mail\PriceList;
 use App\Platforms\Binance;
 use App\Platforms\Bitmex;
@@ -23,12 +24,12 @@ class IndexController extends Controller
         date_default_timezone_set('PRC');
         $list = PriceRecord::paginate(10);
 
-        $chart = Charts::create('bar', 'highcharts')
-            ->title('合约差价变动')
-            ->elementLabel('价格')
-            ->labels($list->pluck('created_at'))
-            ->values($list->pluck('XBTH19_XBTM19'))
-            ->responsive(false);
+        $chart = new SampleChart;
+        $chart->title('合约差价变动')
+            ->labels($list->pluck('created_at'))  //行
+            ->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')) //列
+            ->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')) //列
+//            ->responsive(false);
 
         return view('showList', ['list' => $list, 'chart' => $chart]);
 
