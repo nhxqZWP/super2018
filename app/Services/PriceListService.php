@@ -9,8 +9,10 @@
 namespace App\Services;
 
 
+use App\Mail\PriceList;
 use App\Platforms\Bitmex;
 use App\PriceRecord;
+use Illuminate\Support\Facades\Mail;
 
 class PriceListService
 {
@@ -36,6 +38,13 @@ class PriceListService
         $record->XBTUSD_XBTH19 = $priceList['XBTUSD'] - $priceList['XBTH19'];
         $record->XBTH19_XBTM19 = $priceList['XBTH19'] - $priceList['XBTM19'];
         $record->XBTUSD_XBTM19 = $priceList['XBTUSD'] - $priceList['XBTM19'];
+
+        //通知
+        if ($record->XBTH19_XBTM19 < 20 || $record->XBTH19_XBTM19 > 50) {
+            Mail::to(['631849184@qq.com','aimococo@163.com'])->send(new PriceList());
+        }
+
+
         $record->save();
 
     }
