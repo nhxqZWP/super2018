@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\PriceList;
 use App\Platforms\Binance;
 use App\Platforms\Bitmex;
+use App\PriceRecord;
 use App\Services\OrderService;
 use App\Services\PlatformService;
 use App\Services\PriceListService;
