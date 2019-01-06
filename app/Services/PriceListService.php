@@ -42,10 +42,8 @@ class PriceListService
 
     public static function showList()
     {
-        $all = PriceRecord::all();
-        if (!is_null($all)) {
-            dd($all->toArray());
-        }
-        dd('空');
+        date_default_timezone_set('PRC');
+        $list = PriceRecord::paginate(100);
+        return view('showList', ['list' => $list]);
     }
 }
