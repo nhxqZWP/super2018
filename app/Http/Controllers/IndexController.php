@@ -18,6 +18,11 @@ class IndexController extends Controller
 {
     public function getIndex()
     {
+        date_default_timezone_set('PRC');
+        $list = PriceRecord::paginate(100);
+        return view('showList', ['list' => $list]);
+
+
         PriceListService::showList();
 //        PriceListService::getList();
         dd(1);
