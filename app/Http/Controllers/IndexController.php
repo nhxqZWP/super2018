@@ -12,7 +12,6 @@ use App\Services\PlatformService;
 use App\Services\PriceListService;
 use App\Services\StrategyService;
 use App\Services\TargetService;
-use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
@@ -28,7 +27,7 @@ class IndexController extends Controller
         $chart->title('合约差价变动')
             ->labels($list->pluck('created_at'))  //行
             ->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')) //列
-            ->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')) //列
+            ->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')); //列
 //            ->responsive(false);
 
         return view('showList', ['list' => $list, 'chart' => $chart]);
