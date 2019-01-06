@@ -24,7 +24,7 @@ class IndexController extends Controller
         $list = PriceRecord::paginate(10);
 
         $time = [];
-        foreach ($list as $l) {
+        foreach ($list->pluck('created_at') as $l) {
             $time[] = $l->format('Y-m-d\H:i');
         }
 
