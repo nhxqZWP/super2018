@@ -11,6 +11,7 @@ use App\Services\PlatformService;
 use App\Services\PriceListService;
 use App\Services\StrategyService;
 use App\Services\TargetService;
+use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
@@ -21,7 +22,15 @@ class IndexController extends Controller
     {
         date_default_timezone_set('PRC');
         $list = PriceRecord::paginate(10);
-        return view('showList', ['list' => $list]);
+
+        $chart = Charts::create('bar', 'highcharts')
+            ->title('合约差价变动')
+            ->elementLabel('价格')
+            ->labels($list->pluck('created_at'))
+            ->values($list->pluck('XBTH19_XBTM19'))
+            ->responsive(false);
+
+        return view('showList', ['list' => $list, 'chart' => $chart]);
 
 
         PriceListService::showList();
