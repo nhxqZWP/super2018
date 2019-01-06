@@ -23,9 +23,14 @@ class IndexController extends Controller
         date_default_timezone_set('PRC');
         $list = PriceRecord::paginate(10);
 
+        $time = [];
+        foreach ($list as $l) {
+            $time[] = $l->format('Y-m-d\H:i');
+        }
+
         $chart = new SampleChart;
         $chart->title('合约差价变动');
-        $chart->labels($list->pluck('created_at')->format('Y-m-d\H:i'));  //行
+        $chart->labels($time);  //行
         $chart->dataset('XBTUSD-XBTH19','line',$list->pluck('XBTUSD_XBTH19')); //列
         $chart->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')); //列
 //            ->responsive(false);
