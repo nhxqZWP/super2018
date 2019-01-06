@@ -20,7 +20,7 @@ class IndexController extends Controller
     public function getIndex()
     {
         date_default_timezone_set('PRC');
-        $list = PriceRecord::paginate(100);
+        $list = PriceRecord::paginate(10);
         return view('showList', ['list' => $list]);
 
 
