@@ -40,7 +40,7 @@ class PriceListService
         $record->XBTUSD_XBTM19 = $priceList['XBTUSD'] - $priceList['XBTM19'];
 
         //通知
-        if ($record->XBTH19_XBTM19 < 20 || $record->XBTH19_XBTM19 > 50) {
+        if ($record->XBTH19_XBTM19 < 15 || $record->XBTH19_XBTM19 > 40) {
             Mail::to(['631849184@qq.com','aimococo@163.com'])->send(new PriceList());
         }
 

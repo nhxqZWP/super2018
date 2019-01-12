@@ -21,21 +21,21 @@ class IndexController extends Controller
     public function getIndex()
     {
         date_default_timezone_set('PRC');
-        $all = PriceRecord::all();
+//        $all = PriceRecord::all();
+        $list = PriceRecord::orderBy('created_at', 'desc')->paginate(100);
 
         $time = [];
-        foreach ($all->pluck('created_at') as $l) {
+        foreach ($list->pluck('created_at') as $l) {
             $time[] = $l->format('m-d H:i');
         }
 
         $chart = new SampleChart;
         $chart->title('合约差价变动');
         $chart->labels($time);  //行
-        $chart->dataset('XBTUSD-XBTH19','line',$all->pluck('XBTUSD_XBTH19')); //列
-        $chart->dataset('XBTH19-XBTM19','line',$all->pluck('XBTH19_XBTM19')); //列
+        $chart->dataset('XBTUSD-XBTH19','line',$list->pluck('XBTUSD_XBTH19')); //列
+        $chart->dataset('XBTH19-XBTM19','line',$list->pluck('XBTH19_XBTM19')); //列
 //            ->responsive(false);
 
-        $list = PriceRecord::paginate(10);
         return view('showList', ['list' => $list, 'chart' => $chart]);
 
 
