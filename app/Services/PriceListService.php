@@ -41,7 +41,7 @@ class PriceListService
 
         //通知
         if ($record->XBTH19_XBTM19 < 15 || $record->XBTH19_XBTM19 > 40) {
-            Mail::to(['631849184@qq.com','aimococo@163.com'])->send(new PriceList());
+            Mail::to(['631849184@qq.com'])->send(new PriceList());
         }
 
 
